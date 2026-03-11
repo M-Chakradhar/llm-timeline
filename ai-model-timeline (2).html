@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Model Timeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     ROOT VARIABLES & RESET
+  ============================================================ */
+  :root {
+    /* Dark mode (default) */
+    --bg:        #020b15;
+    --bg2:       #040e1d;
+    --surface:   #071e30;
+    --surface2:  #0c2540;
+    --border:    #163550;
+    --border2:   #1f4870;
+    --text:      #e8f4ff;
+    --text2:     #9bbdd8;
+    --text3:     #6a96b8;
+    --accent:    #00d4aa;
+    --glow:      rgba(0,212,170,0.3);
+    --grid-line: rgba(20,55,90,0.4);
+    --header-bg: rgba(2,11,21,0.97);
+    --modal-bg:  #040e1d;
+    --font-title: 'Orbitron', monospace;
+    --font-body:  'Exo 2', sans-serif;
+    --font-mono:  'Share Tech Mono', monospace;
+    --radius:     8px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── LIGHT MODE ── */
+  html.light {
+    --bg:        #f0f4f9;
+    --bg2:       #e4ecf5;
+    --surface:   #ffffff;
+    --surface2:  #edf2f9;
+    --border:    #c5d6e8;
+    --border2:   #a8c0d8;
+    --text:      #0d1f30;
+    --text2:     #2d5070;
+    --text3:     #4a7090;
+    --glow:      rgba(0,140,110,0.2);
+    --grid-line: rgba(160,190,220,0.4);
+    --header-bg: rgba(240,244,249,0.97);
+    --modal-bg:  #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
+  header {
+    padding: 32px 40px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--header-bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    transition: background 0.4s ease, border-color 0.4s ease;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+  h1 {
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    background: linear-gradient(135deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    transition: background var(--transition);
+  }
+  .header-sub {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .header-tagline {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text2);
+    letter-spacing: 0.1em;
+  }
+  /* Theme Toggle */
+  .theme-toggle {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    padding: 6px 12px;
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    background: var(--surface);
+    transition: all var(--transition);
+    user-select: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--surface2);
+  }
+  .theme-toggle .icon { font-size: 0.9rem; transition: transform 0.4s ease; }
+  .theme-toggle:hover .icon { transform: rotate(20deg); }
+
+  /* ============================================================
+     PROVIDER TABS
+  ============================================================ */
+  .provider-tabs-wrap {
+    padding: 16px 40px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .provider-tabs-wrap::-webkit-scrollbar { display: none; }
+  .provider-tabs {
+    display: flex;
+    gap: 6px;
+    padding-bottom: 0;
+    min-width: max-content;
+  }
+  .tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    background: var(--surface);
+    color: var(--text2);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all var(--transition);
+    position: relative;
+    white-space: nowrap;
+    outline: none;
+  }
+  .tab-btn:hover {
+    background: var(--surface2);
+    color: var(--text);
+  }
+  .tab-btn.active {
+    background: var(--bg);
+    color: var(--accent);
+    border-color: var(--accent);
+    border-bottom-color: var(--bg);
+    box-shadow: 0 -4px 12px var(--glow), inset 0 1px 0 var(--accent);
+    z-index: 1;
+  }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--bg);
+  }
+  .tab-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+    transition: opacity var(--transition);
+    flex-shrink: 0;
+  }
+  .tab-btn.active .tab-dot {
+    opacity: 1;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .tab-count {
+    font-size: 0.6rem;
+    opacity: 0.5;
+    padding: 1px 5px;
+    border-radius: 10px;
+    border: 1px solid currentColor;
+    margin-left: 2px;
+  }
+
+  /* ============================================================
+     MAIN CONTENT AREA
+  ============================================================ */
+  main {
+    padding: 0 40px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Provider strip below tabs */
+  .provider-header {
+    padding: 20px 0 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    animation: fadeIn 0.4s ease;
+  }
+  .provider-name-large {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+    text-shadow: 0 0 20px var(--glow);
+  }
+  .provider-desc {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text2);
+    max-width: 500px;
+    line-height: 1.6;
+  }
+  .provider-stats {
+    margin-left: auto;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text2);
+  }
+  .provider-stats strong {
+    color: var(--accent);
+    display: block;
+    font-size: 1.4rem;
+    font-family: var(--font-title);
+  }
+
+  /* ============================================================
+     TIMELINE
+  ============================================================ */
+  .timeline {
+    position: relative;
+    padding: 20px 0 60px;
+    animation: fadeIn 0.5s ease;
+  }
+  /* Center spine */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      180deg,
+      var(--accent) 0%,
+      rgba(var(--accent-rgb, 0,212,170), 0.4) 40%,
+      rgba(var(--accent-rgb, 0,212,170), 0.1) 80%,
+      transparent 100%
+    );
+    box-shadow: 0 0 8px var(--glow);
+  }
+  /* Year markers */
+  .year-marker {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 4px;
+  }
+  .year-marker span {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text2);
+    background: var(--bg);
+    padding: 2px 10px;
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    letter-spacing: 0.12em;
+  }
+
+  /* Timeline item */
+  .tl-item {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    margin-bottom: 12px;
+    min-height: 90px;
+    animation: slideIn 0.4s ease both;
+  }
+  .tl-item:nth-child(even) { flex-direction: row-reverse; }
+
+  /* Node (circle on spine) */
+  .tl-node {
+    position: absolute;
+    left: 50%;
+    top: 22px;
+    transform: translateX(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--bg2);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 12px var(--glow), inset 0 0 8px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    cursor: default;
+    transition: all var(--transition);
+    flex-shrink: 0;
+  }
+  .tl-node::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, rgba(255,255,255,0.08), transparent 60%);
+  }
+  .tl-node-inner {
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    color: var(--accent);
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+    padding: 2px;
+    z-index: 1;
+    font-weight: bold;
+    text-shadow: 0 0 6px var(--glow);
+  }
+  .tl-item:hover .tl-node {
+    transform: translateX(-50%) scale(1.15);
+    box-shadow: 0 0 20px var(--glow), 0 0 40px var(--glow);
+  }
+
+  /* Connecting line from node to card */
+  .tl-connector {
+    width: calc(50% - 36px);
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent));
+    position: absolute;
+    top: 47px;
+    right: calc(50% + 26px);
+    opacity: 0.3;
+  }
+  .tl-item:nth-child(even) .tl-connector {
+    background: linear-gradient(270deg, transparent, var(--accent));
+    right: auto;
+    left: calc(50% + 26px);
+  }
+
+  /* Card side */
+  .tl-card-side {
+    width: calc(50% - 50px);
+    padding-right: 20px;
+  }
+  .tl-item:nth-child(even) .tl-card-side {
+    padding-right: 0;
+    padding-left: 20px;
+  }
+
+  .tl-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .tl-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .tl-card:hover {
+    background: var(--surface2);
+    border-color: var(--border2);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 15px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+  }
+  .tl-card:hover::before { opacity: 1; }
+
+  .card-model-name {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .card-date-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .card-date {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-lang   { color: #00d4aa; border-color: #00d4aa22; background: #00d4aa11; }
+  .badge-multi  { color: #a78bfa; border-color: #a78bfa22; background: #a78bfa11; }
+  .badge-code   { color: #38bdf8; border-color: #38bdf822; background: #38bdf811; }
+  .badge-reason { color: #fb923c; border-color: #fb923c22; background: #fb923c11; }
+  .badge-vision { color: #f472b6; border-color: #f472b622; background: #f472b611; }
+  .badge-embed  { color: #4ade80; border-color: #4ade8022; background: #4ade8011; }
+  .badge-open   { color: #fbbf24; border-color: #fbbf2422; background: #fbbf2411; }
+
+  .card-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .stat-item {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text2);
+  }
+  .stat-item span {
+    color: var(--accent);
+    font-weight: bold;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .btn-dive {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 5px 12px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all var(--transition);
+  }
+  .btn-dive:hover {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 12px var(--glow);
+  }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2,11,21,0.75);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  html.light .modal-overlay {
+    background: rgba(180,200,220,0.7);
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .modal {
+    background: var(--modal-bg);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.92) translateY(16px);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8), 0 0 30px var(--glow);
+  }
+  .modal-overlay.open .modal {
+    transform: scale(1) translateY(0);
+  }
+  .modal-header {
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--modal-bg);
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .modal-title-block {}
+  .modal-provider-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.8;
+  }
+  .modal-model-name {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text);
+    text-shadow: 0 0 20px var(--glow);
+  }
+  .modal-date {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    flex-shrink: 0;
+  }
+  .modal-close:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--bg);
+  }
+  .modal-body {
+    padding: 20px 24px 28px;
+  }
+  .modal-desc {
+    font-size: 0.85rem;
+    color: var(--text2);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    padding: 14px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--accent);
+  }
+  .modal-section {
+    margin-bottom: 20px;
+  }
+  .modal-section-title {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .modal-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .spec-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+  }
+  .spec-label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .spec-value {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text);
+    font-weight: bold;
+  }
+  .spec-value.accent { color: var(--accent); }
+  .caps-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .cap-tag {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    letter-spacing: 0.06em;
+  }
+  .hw-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .modal-badge-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  /* Light mode: ensure modal box-shadow is softer */
+  html.light .modal {
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2), 0 0 20px var(--glow);
+  }
+  html.light .tl-card {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  html.light .tl-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12), 0 0 10px var(--glow);
+  }
+
+  /* ============================================================
+     EMPTY / LOADING STATES
+  ============================================================ */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text3);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+  .empty-state .big { font-size: 2rem; margin-bottom: 12px; opacity: 0.4; }
+
+  /* ============================================================
+     ANIMATIONS
+  ============================================================ */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 12px var(--glow); }
+    50%       { box-shadow: 0 0 24px var(--glow), 0 0 40px var(--glow); }
+  }
+  .tl-node { animation: pulse 3s ease-in-out infinite; }
+
+  /* ============================================================
+     SCROLLBAR
+  ============================================================ */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 700px) {
+    header { padding: 20px; }
+    main { padding: 0 20px 60px; }
+    .provider-tabs-wrap { padding: 12px 20px 0; }
+    h1 { font-size: 1.2rem; }
+    .timeline::before { left: 24px; transform: none; }
+    .tl-item, .tl-item:nth-child(even) { flex-direction: row; }
+    .tl-node { left: 24px; top: 16px; width: 40px; height: 40px; transform: translateX(-50%); }
+    .tl-node-inner { font-size: 0.45rem; }
+    .tl-card-side,
+    .tl-item:nth-child(even) .tl-card-side {
+      width: 100%;
+      padding-left: 72px;
+      padding-right: 0;
+    }
+    .tl-connector,
+    .tl-item:nth-child(even) .tl-connector { display: none; }
+    .spec-grid { grid-template-columns: 1fr; }
+    .provider-name-large { font-size: 1.4rem; }
+    .provider-stats { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header>
+  <div class="header-top">
+    <h1 id="site-title">AI Model Timeline</h1>
+    <span class="header-sub">// Foundational Models Index</span>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+      <span class="icon" id="theme-icon">☀️</span>
+      <span id="theme-label">Light Mode</span>
+    </button>
+  </div>
+  <div class="header-tagline">Track every major release · Click a model for deep-dive specs</div>
+</header>
+
+<!-- ============================================================
+     PROVIDER TABS
+============================================================ -->
+<div class="provider-tabs-wrap">
+  <div class="provider-tabs" id="provider-tabs">
+    <!-- Injected by JS -->
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+<main>
+  <div id="provider-header" class="provider-header"></div>
+  <div id="timeline" class="timeline"></div>
+</main>
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title-block">
+        <div class="modal-provider-tag" id="modal-provider"></div>
+        <div class="modal-model-name" id="modal-name"></div>
+        <div class="modal-date" id="modal-date"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ██████╗  █████╗ ████████╗ █████╗
+   ██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗
+   ██║  ██║███████║   ██║   ███████║
+   ██║  ██║██╔══██║   ██║   ██╔══██║
+   ██████╔╝██║  ██║   ██║   ██║  ██║
+   ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
+
+   ADD / EDIT MODELS HERE
+   Structure:
+   {
+     id:          unique string slug
+     name:        full model name
+     shortName:   abbreviation for the node circle (max ~8 chars)
+     date:        "YYYY-MM" for sorting (required)
+     displayDate: "Mon YYYY" shown in UI
+     type:        "Language" | "Multimodal" | "Reasoning" | "Code" | "Vision" | "Embedding" | "Open"
+     brief: {
+       params:   parameter count string
+       context:  context window string
+       access:   "API" | "Open" | "Cloud" | "Local"
+     }
+     details: {
+       description:    2-3 sentence summary
+       parameters:     full param count string
+       contextWindow:  context window
+       inputTypes:     array of strings
+       outputTypes:    array of strings
+       trainingCutoff: date string
+       hardware:       hardware requirements string
+       capabilities:   array of capability strings
+       pricing:        pricing info string (use "Open Source" if free)
+       notable:        one standout fact
+     }
+   }
+============================================================ */
+const PROVIDERS = [
+
+  /* ──────────────────────────────────────────
+     OPENAI
+  ────────────────────────────────────────── */
+  {
+    id: "openai",
+    name: "OpenAI",
+    color: "#00d4aa",
+    colorRGB: "0,212,170",
+    description: "Pioneer of large-scale language models and the organization behind ChatGPT, GPT-4, and the o-series reasoning models.",
+    models: [
+      {
+        id: "gpt3", name: "GPT-3", shortName: "GPT-3",
+        date: "2020-06", displayDate: "Jun 2020", type: "Language",
+        brief: { params: "175B", context: "4K tokens", access: "API" },
+        details: {
+          description: "GPT-3 was a landmark language model with 175 billion parameters, demonstrating that scale alone could produce emergent capabilities like few-shot learning across diverse tasks without fine-tuning.",
+          parameters: "175 billion", contextWindow: "4,096 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2019",
+          hardware: "Cloud only (OpenAI API). Requires high-end GPU cluster (~800GB VRAM) to self-host.",
+          capabilities: ["Text completion", "Translation", "Summarization", "Few-shot learning", "Q&A"],
+          pricing: "Legacy — superseded by newer models",
+          notable: "First model to demonstrate reliable few-shot in-context learning at scale."
+        }
+      },
+      {
+        id: "chatgpt", name: "ChatGPT (GPT-3.5)", shortName: "GPT-3.5",
+        date: "2022-11", displayDate: "Nov 2022", type: "Language",
+        brief: { params: "~175B", context: "16K tokens", access: "API" },
+        details: {
+          description: "GPT-3.5 Turbo was fine-tuned from GPT-3 using RLHF to produce a conversational assistant. ChatGPT's public launch caused a cultural phenomenon, reaching 100M users in 2 months.",
+          parameters: "~175 billion (estimated)", contextWindow: "16,384 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Sep 2021",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["Conversation", "Text completion", "Summarization", "Code", "Translation", "RLHF alignment"],
+          pricing: "$0.50/M input · $1.50/M output (gpt-3.5-turbo)",
+          notable: "Fastest-growing consumer product in history at launch."
+        }
+      },
+      {
+        id: "gpt4", name: "GPT-4", shortName: "GPT-4",
+        date: "2023-03", displayDate: "Mar 2023", type: "Multimodal",
+        brief: { params: "~1.8T (est.)", context: "8K / 32K", access: "API" },
+        details: {
+          description: "GPT-4 was OpenAI's first publicly announced multimodal model, accepting image and text inputs. It scored in the top 10% on the bar exam and showed dramatic improvements in reasoning over GPT-3.5.",
+          parameters: "~1.8 trillion (mixture-of-experts, estimated — not officially confirmed)",
+          contextWindow: "8,192 tokens (32K variant available)",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Sep 2021",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["Advanced reasoning", "Vision understanding", "Code generation", "Mathematical problem solving", "Long document analysis"],
+          pricing: "$30/M input · $60/M output (legacy)",
+          notable: "Passed the bar exam at ~90th percentile; first GPT-series multimodal model."
+        }
+      },
+      {
+        id: "gpt4-turbo", name: "GPT-4 Turbo", shortName: "GPT-4T",
+        date: "2023-11", displayDate: "Nov 2023", type: "Multimodal",
+        brief: { params: "~1.8T (est.)", context: "128K tokens", access: "API" },
+        details: {
+          description: "GPT-4 Turbo extended GPT-4's context to 128K tokens, updated training data to April 2023, and was significantly cheaper. It introduced the JSON mode and improved instruction following.",
+          parameters: "~1.8 trillion (estimated)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Apr 2023",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["128K context", "JSON mode", "Vision", "Function calling", "Code", "Reasoning"],
+          pricing: "$10/M input · $30/M output",
+          notable: "First GPT model with 128K context window."
+        }
+      },
+      {
+        id: "gpt4o", name: "GPT-4o", shortName: "GPT-4o",
+        date: "2024-05", displayDate: "May 2024", type: "Multimodal",
+        brief: { params: "~200B (est.)", context: "128K tokens", access: "API" },
+        details: {
+          description: "GPT-4o ('omni') is a natively multimodal model processing text, audio, and images in a unified architecture. It's 2x faster and 50% cheaper than GPT-4 Turbo, with improved vision and real-time audio capabilities.",
+          parameters: "~200 billion (estimated — optimized dense architecture)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image", "Audio", "Video (frames)"], outputTypes: ["Text", "Audio"],
+          trainingCutoff: "Oct 2023",
+          hardware: "Cloud only (OpenAI API). Real-time audio requires low-latency infrastructure.",
+          capabilities: ["Real-time audio", "Vision", "Code", "Reasoning", "Multilingual", "Structured outputs", "Function calling"],
+          pricing: "$5/M input · $15/M output",
+          notable: "First natively omnimodal model — processes audio, vision, text in a single architecture."
+        }
+      },
+      {
+        id: "gpt4o-mini", name: "GPT-4o mini", shortName: "4o-mini",
+        date: "2024-07", displayDate: "Jul 2024", type: "Language",
+        brief: { params: "~8B (est.)", context: "128K tokens", access: "API" },
+        details: {
+          description: "GPT-4o mini is a highly cost-efficient small model that outperforms GPT-3.5 on most benchmarks at a fraction of the cost. It's designed for high-volume, cost-sensitive applications.",
+          parameters: "~8 billion (estimated small model)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2023",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["Chat", "Code", "Vision (basic)", "Function calling", "Structured output"],
+          pricing: "$0.15/M input · $0.60/M output",
+          notable: "Cheapest capable model in OpenAI's lineup — outperforms GPT-3.5 at ~7x lower cost."
+        }
+      },
+      {
+        id: "o1", name: "o1", shortName: "o1",
+        date: "2024-09", displayDate: "Sep 2024", type: "Reasoning",
+        brief: { params: "Unknown", context: "128K tokens", access: "API" },
+        details: {
+          description: "o1 is OpenAI's first public 'reasoning model', using chain-of-thought reinforcement learning to 'think before answering'. It dramatically outperforms GPT-4o on PhD-level science and competitive coding benchmarks.",
+          parameters: "Undisclosed",
+          contextWindow: "128,000 tokens (200K in o1-pro)",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2023",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["Multi-step reasoning", "Math (olympiad level)", "Science problems", "Code", "Logic puzzles", "Agentic tasks"],
+          pricing: "$15/M input · $60/M output",
+          notable: "Scored 83rd percentile on IOI (International Olympiad in Informatics) in competitive coding."
+        }
+      },
+      {
+        id: "o1-mini", name: "o1-mini", shortName: "o1-mini",
+        date: "2024-09", displayDate: "Sep 2024", type: "Reasoning",
+        brief: { params: "Unknown", context: "128K tokens", access: "API" },
+        details: {
+          description: "o1-mini is a smaller, faster, cheaper version of o1 focused specifically on STEM reasoning and coding tasks, trading breadth for speed.",
+          parameters: "Undisclosed (smaller than o1)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2023",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["STEM reasoning", "Math", "Code generation", "Logic"],
+          pricing: "$3/M input · $12/M output",
+          notable: "Cost-efficient reasoning model, 80% cheaper than o1 for STEM tasks."
+        }
+      },
+      {
+        id: "o3-mini", name: "o3-mini", shortName: "o3-mini",
+        date: "2025-01", displayDate: "Jan 2025", type: "Reasoning",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "o3-mini is a compact reasoning model with adjustable thinking effort (low/medium/high). It achieves competitive reasoning performance at significantly lower cost than o1.",
+          parameters: "Undisclosed",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Dec 2024 (est.)",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["Reasoning", "Math", "Code", "Science", "Adjustable thinking depth"],
+          pricing: "$1.10/M input · $4.40/M output (medium)",
+          notable: "Introduces adjustable reasoning effort — balance speed vs. depth per request."
+        }
+      },
+      {
+        id: "gpt45", name: "GPT-4.5", shortName: "GPT-4.5",
+        date: "2025-02", displayDate: "Feb 2025", type: "Language",
+        brief: { params: "Unknown", context: "128K tokens", access: "API" },
+        details: {
+          description: "GPT-4.5 is OpenAI's largest non-reasoning dense model, featuring improved emotional intelligence, nuanced conversation ability, and stronger world knowledge.",
+          parameters: "Undisclosed (largest dense model to date)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Jan 2025 (est.)",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["Advanced conversation", "Emotional intelligence", "World knowledge", "Code", "Reasoning", "Vision"],
+          pricing: "$75/M input · $150/M output",
+          notable: "Highest conversational EQ of any OpenAI model."
+        }
+      },
+      {
+        id: "o3", name: "o3", shortName: "o3",
+        date: "2025-04", displayDate: "Apr 2025", type: "Reasoning",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "o3 is OpenAI's most capable reasoning model, showing unprecedented performance on ARC-AGI, SWE-bench, and doctoral-level scientific benchmarks. Uses extended chain-of-thought with tool use.",
+          parameters: "Undisclosed",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image", "Code"], outputTypes: ["Text", "Code"],
+          trainingCutoff: "Jan 2025 (est.)",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["Advanced reasoning", "ARC-AGI tasks", "Agentic code execution", "Multi-step planning", "Tool use", "Math"],
+          pricing: "$10/M input · $40/M output",
+          notable: "Achieved 87.5% on ARC-AGI benchmark — a major AI milestone."
+        }
+      },
+      {
+        id: "o4-mini", name: "o4-mini", shortName: "o4-mini",
+        date: "2025-04", displayDate: "Apr 2025", type: "Reasoning",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "o4-mini is the efficient companion to o3, delivering strong reasoning performance at much lower cost. It maintains multimodal capability and supports tool use in agentic workflows.",
+          parameters: "Undisclosed",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Jan 2025 (est.)",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["Reasoning", "Vision", "Code", "Math", "Tool use", "Agentic workflows"],
+          pricing: "$1.10/M input · $4.40/M output",
+          notable: "Best cost-performance ratio of any OpenAI reasoning model."
+        }
+      },
+      {
+        id: "gpt41", name: "GPT-4.1", shortName: "GPT-4.1",
+        date: "2025-04", displayDate: "Apr 2025", type: "Language",
+        brief: { params: "Unknown", context: "1M tokens", access: "API" },
+        details: {
+          description: "GPT-4.1 introduces a 1 million token context window, major improvements to instruction following, and superior coding benchmarks. Designed as a developer-focused workhorse model.",
+          parameters: "Undisclosed",
+          contextWindow: "1,000,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Mar 2025 (est.)",
+          hardware: "Cloud only (OpenAI API).",
+          capabilities: ["1M context", "Instruction following", "Code", "Agentic tasks", "Long document analysis"],
+          pricing: "$2/M input · $8/M output",
+          notable: "First OpenAI model with 1 million token context window."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     ANTHROPIC (CLAUDE)
+  ────────────────────────────────────────── */
+  {
+    id: "anthropic",
+    name: "Anthropic",
+    color: "#c97b4b",
+    colorRGB: "201,123,75",
+    description: "AI safety company building the Claude family of models, focused on Constitutional AI and alignment research.",
+    models: [
+      {
+        id: "claude1", name: "Claude 1", shortName: "C1",
+        date: "2023-03", displayDate: "Mar 2023", type: "Language",
+        brief: { params: "~52B (est.)", context: "9K tokens", access: "API" },
+        details: {
+          description: "Claude 1 was Anthropic's first publicly available model, trained using Constitutional AI (CAI) — a self-critique and revision process enabling safer outputs without relying entirely on human feedback.",
+          parameters: "~52 billion (estimated)",
+          contextWindow: "9,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Early 2023",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["Conversation", "Summarization", "Code", "Analysis", "Constitutional AI alignment"],
+          pricing: "Legacy",
+          notable: "First commercial Constitutional AI model; emphasis on honesty and harm avoidance."
+        }
+      },
+      {
+        id: "claude2", name: "Claude 2", shortName: "C2",
+        date: "2023-07", displayDate: "Jul 2023", type: "Language",
+        brief: { params: "Unknown", context: "100K tokens", access: "API" },
+        details: {
+          description: "Claude 2 introduced a 100K token context window — revolutionary at the time — and improved coding, math, and reasoning abilities. It could process entire codebases or books in a single prompt.",
+          parameters: "Undisclosed",
+          contextWindow: "100,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Early 2023",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["100K context", "Code", "Summarization", "Long document analysis", "Math", "Multilingual"],
+          pricing: "$8/M input · $24/M output (legacy)",
+          notable: "First model with 100K token context — could read entire novels in one prompt."
+        }
+      },
+      {
+        id: "claude21", name: "Claude 2.1", shortName: "C2.1",
+        date: "2023-11", displayDate: "Nov 2023", type: "Language",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "Claude 2.1 doubled the context window to 200K tokens and significantly reduced hallucination rates. It introduced tool use (function calling) as a beta feature.",
+          parameters: "Undisclosed",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Early 2023",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["200K context", "Tool use (beta)", "Reduced hallucination", "Code", "Analysis"],
+          pricing: "$8/M input · $24/M output (legacy)",
+          notable: "2x context of Claude 2; tool use beta — early function calling capability."
+        }
+      },
+      {
+        id: "claude3h", name: "Claude 3 Haiku", shortName: "C3-H",
+        date: "2024-03", displayDate: "Mar 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "Claude 3 Haiku is the fastest and most compact member of the Claude 3 family. It's designed for high-throughput applications where latency and cost matter most, while still accepting vision inputs.",
+          parameters: "Undisclosed (smallest Claude 3 model)",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Aug 2023",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["Vision", "Fast inference", "Summarization", "Extraction", "Classification", "Code"],
+          pricing: "$0.25/M input · $1.25/M output",
+          notable: "Fastest inference of Claude 3 family — sub-second for short responses."
+        }
+      },
+      {
+        id: "claude3s", name: "Claude 3 Sonnet", shortName: "C3-S",
+        date: "2024-03", displayDate: "Mar 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "Claude 3 Sonnet sits in the middle of the Claude 3 family, balancing capability with speed. It outperformed GPT-3.5 across benchmarks and was suited for enterprise deployments.",
+          parameters: "Undisclosed (mid-tier Claude 3)",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Aug 2023",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["Vision", "Code", "Reasoning", "Analysis", "Summarization"],
+          pricing: "$3/M input · $15/M output",
+          notable: "Balanced intelligence-speed tradeoff; strong for enterprise use cases."
+        }
+      },
+      {
+        id: "claude3o", name: "Claude 3 Opus", shortName: "C3-O",
+        date: "2024-03", displayDate: "Mar 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "Claude 3 Opus was the first Claude model to surpass GPT-4 on key benchmarks. Exceptionally capable at nuanced analysis, complex reasoning, and sophisticated creative writing.",
+          parameters: "Undisclosed (largest Claude 3 model)",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Aug 2023",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["Advanced reasoning", "Complex analysis", "Vision", "Creative writing", "Research synthesis", "Math"],
+          pricing: "$15/M input · $75/M output",
+          notable: "First Claude model to outperform GPT-4 on MMLU, GPQA, and HumanEval benchmarks."
+        }
+      },
+      {
+        id: "claude35s", name: "Claude 3.5 Sonnet", shortName: "C3.5-S",
+        date: "2024-06", displayDate: "Jun 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "Claude 3.5 Sonnet became the most widely used Claude model, matching Opus-level performance at Sonnet prices. It introduced Computer Use — the ability to control desktop interfaces.",
+          parameters: "Undisclosed",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Apr 2024",
+          hardware: "Cloud only (Anthropic API). Computer Use requires sandboxed desktop environment.",
+          capabilities: ["Computer Use (beta)", "Vision", "Code", "Agentic tasks", "Analysis", "Writing"],
+          pricing: "$3/M input · $15/M output",
+          notable: "Introduced Computer Use — first commercially available model to control desktop UIs."
+        }
+      },
+      {
+        id: "claude35h", name: "Claude 3.5 Haiku", shortName: "C3.5-H",
+        date: "2024-10", displayDate: "Oct 2024", type: "Language",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "Claude 3.5 Haiku updated the Haiku tier to match or exceed Claude 3 Opus at a fraction of the cost. It's the go-to model for latency-sensitive pipelines needing strong intelligence.",
+          parameters: "Undisclosed",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Jul 2024",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["Fast inference", "Code", "Summarization", "Extraction", "Agent tasks"],
+          pricing: "$0.80/M input · $4/M output",
+          notable: "Outperforms Claude 3 Opus at ~20x lower cost."
+        }
+      },
+      {
+        id: "claude37s", name: "Claude 3.7 Sonnet", shortName: "C3.7-S",
+        date: "2025-02", displayDate: "Feb 2025", type: "Reasoning",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "Claude 3.7 Sonnet introduced 'extended thinking' — a visible chain-of-thought mode letting users see Claude's reasoning process. It set new standards for software engineering and agentic tasks.",
+          parameters: "Undisclosed",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Nov 2024 (est.)",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["Extended thinking", "Agentic coding", "Vision", "Reasoning", "Math", "SWE-bench top scorer"],
+          pricing: "$3/M input · $15/M output",
+          notable: "First Claude with extended thinking; top SWE-bench score at launch."
+        }
+      },
+      {
+        id: "claude4s", name: "Claude Sonnet 4", shortName: "C4-S",
+        date: "2025-05", displayDate: "May 2025", type: "Reasoning",
+        brief: { params: "Unknown", context: "200K tokens", access: "API" },
+        details: {
+          description: "Claude Sonnet 4 is the primary production model of the Claude 4 family, offering improved coding, reasoning, and instruction following with a continued focus on safety and honesty.",
+          parameters: "Undisclosed",
+          contextWindow: "200,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Early 2025",
+          hardware: "Cloud only (Anthropic API).",
+          capabilities: ["Advanced reasoning", "Coding", "Vision", "Agentic tasks", "Analysis", "Extended thinking"],
+          pricing: "$3/M input · $15/M output",
+          notable: "Part of Claude 4 family alongside Opus 4; model ID: claude-sonnet-4."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     GOOGLE DEEPMIND (GEMINI)
+  ────────────────────────────────────────── */
+  {
+    id: "google",
+    name: "Google",
+    color: "#4285f4",
+    colorRGB: "66,133,244",
+    description: "Google DeepMind's Gemini series — natively multimodal models built for integration across Google's products and APIs.",
+    models: [
+      {
+        id: "bard", name: "Bard (PaLM 2)", shortName: "Bard",
+        date: "2023-03", displayDate: "Mar 2023", type: "Language",
+        brief: { params: "340B (PaLM 2)", context: "8K tokens", access: "Cloud" },
+        details: {
+          description: "Google's first public AI assistant, initially powered by LaMDA and then PaLM 2. Launched as a response to ChatGPT, Bard had a rocky start but improved rapidly with PaLM 2.",
+          parameters: "~340 billion (PaLM 2 Ultra estimate)",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Early 2023",
+          hardware: "Cloud only (Google AI / Bard.google.com).",
+          capabilities: ["Conversation", "Summarization", "Code", "Translation", "Google Search integration"],
+          pricing: "Free (consumer product)",
+          notable: "Google's first public generative AI product; later rebranded to Gemini."
+        }
+      },
+      {
+        id: "gemini10", name: "Gemini 1.0", shortName: "Gem 1.0",
+        date: "2023-12", displayDate: "Dec 2023", type: "Multimodal",
+        brief: { params: "Unknown", context: "32K tokens", access: "API" },
+        details: {
+          description: "Gemini 1.0 was Google's first natively multimodal model family (Ultra, Pro, Nano), trained from the ground up to understand text, code, images, audio, and video simultaneously.",
+          parameters: "Undisclosed (Ultra is largest)",
+          contextWindow: "32,768 tokens",
+          inputTypes: ["Text", "Image", "Audio", "Video"], outputTypes: ["Text"],
+          trainingCutoff: "Mid 2023",
+          hardware: "Ultra: Cloud only. Nano: On-device (Pixel 8 Pro).",
+          capabilities: ["Multimodal understanding", "Code", "Reasoning", "Translation", "Math", "On-device (Nano)"],
+          pricing: "Free tier available; Pro API via AI Studio",
+          notable: "First natively multimodal model from Google; Nano runs on Pixel phones."
+        }
+      },
+      {
+        id: "gemini15p", name: "Gemini 1.5 Pro", shortName: "1.5 Pro",
+        date: "2024-02", displayDate: "Feb 2024", type: "Multimodal",
+        brief: { params: "Unknown (MoE)", context: "1M tokens", access: "API" },
+        details: {
+          description: "Gemini 1.5 Pro uses a Mixture-of-Experts architecture and introduced a 1 million token context window — capable of processing an hour of video, 11 hours of audio, or an entire codebase in one prompt.",
+          parameters: "Undisclosed (Mixture-of-Experts)",
+          contextWindow: "1,000,000 tokens (2M in extended)",
+          inputTypes: ["Text", "Image", "Audio", "Video", "Code"], outputTypes: ["Text"],
+          trainingCutoff: "Nov 2023",
+          hardware: "Cloud only (Google AI Studio / Vertex AI).",
+          capabilities: ["1M context", "Video understanding", "Audio analysis", "Code", "In-context learning", "Cross-modal reasoning"],
+          pricing: "$1.25/M input (up to 128K) · $5/M input (over 128K)",
+          notable: "World's first 1M context model; processes full-length films in a single prompt."
+        }
+      },
+      {
+        id: "gemini15f", name: "Gemini 1.5 Flash", shortName: "1.5 Fl",
+        date: "2024-05", displayDate: "May 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "1M tokens", access: "API" },
+        details: {
+          description: "Gemini 1.5 Flash is a fast, efficient variant of 1.5 Pro, offering the same 1M context window at much lower cost and latency — ideal for high-volume applications.",
+          parameters: "Undisclosed (distilled from 1.5 Pro)",
+          contextWindow: "1,000,000 tokens",
+          inputTypes: ["Text", "Image", "Audio", "Video"], outputTypes: ["Text"],
+          trainingCutoff: "Nov 2023",
+          hardware: "Cloud only (Google AI Studio / Vertex AI).",
+          capabilities: ["1M context", "Fast inference", "Vision", "Summarization", "Code"],
+          pricing: "$0.075/M input (up to 128K) · $0.30/M input (over 128K)",
+          notable: "1M context at ultra-low cost — 10x cheaper than 1.5 Pro."
+        }
+      },
+      {
+        id: "gemini20f", name: "Gemini 2.0 Flash", shortName: "2.0 Fl",
+        date: "2024-12", displayDate: "Dec 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "1M tokens", access: "API" },
+        details: {
+          description: "Gemini 2.0 Flash is Google's flagship speed-optimized model of the 2.0 generation, with native tool use, multimodal inputs/outputs, and agentic capabilities. It surpasses 1.5 Pro on most benchmarks.",
+          parameters: "Undisclosed",
+          contextWindow: "1,000,000 tokens",
+          inputTypes: ["Text", "Image", "Audio", "Video"], outputTypes: ["Text", "Image (experimental)", "Audio"],
+          trainingCutoff: "Aug 2024",
+          hardware: "Cloud only (Google AI Studio / Vertex AI).",
+          capabilities: ["Native tool use", "Agentic", "Multimodal I/O", "Code", "Real-time audio", "Vision"],
+          pricing: "$0.10/M input · $0.40/M output",
+          notable: "First Gemini model with native image and audio output generation."
+        }
+      },
+      {
+        id: "gemini20pro", name: "Gemini 2.0 Pro", shortName: "2.0 Pro",
+        date: "2025-02", displayDate: "Feb 2025", type: "Multimodal",
+        brief: { params: "Unknown", context: "2M tokens", access: "API" },
+        details: {
+          description: "Gemini 2.0 Pro Experimental is Google's most capable non-thinking model, featuring a 2M token context window, superior coding, and strong world knowledge.",
+          parameters: "Undisclosed",
+          contextWindow: "2,000,000 tokens",
+          inputTypes: ["Text", "Image", "Audio", "Video"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2024",
+          hardware: "Cloud only (Google AI Studio / Vertex AI).",
+          capabilities: ["2M context", "Code", "World knowledge", "Complex reasoning", "Vision", "Agent tasks"],
+          pricing: "Experimental / free (AI Studio)",
+          notable: "Largest context window of any production model at launch."
+        }
+      },
+      {
+        id: "gemini25p", name: "Gemini 2.5 Pro", shortName: "2.5 Pro",
+        date: "2025-03", displayDate: "Mar 2025", type: "Reasoning",
+        brief: { params: "Unknown", context: "1M tokens", access: "API" },
+        details: {
+          description: "Gemini 2.5 Pro is Google's thinking model, incorporating extended reasoning capabilities. It topped multiple major AI benchmarks including MMLU Pro, GPQA Diamond, and competitive coding leaderboards.",
+          parameters: "Undisclosed",
+          contextWindow: "1,000,000 tokens",
+          inputTypes: ["Text", "Image", "Audio", "Video"], outputTypes: ["Text"],
+          trainingCutoff: "Jan 2025 (est.)",
+          hardware: "Cloud only (Google AI Studio / Vertex AI).",
+          capabilities: ["Extended thinking", "Math", "Code", "Science", "Vision", "Reasoning benchmarks leader"],
+          pricing: "$1.25/M input · $10/M output",
+          notable: "Ranked #1 on LMSys Chatbot Arena at launch; top Codeforces competitive coding score."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     META AI (LLAMA)
+  ────────────────────────────────────────── */
+  {
+    id: "meta",
+    name: "Meta AI",
+    color: "#0a84ff",
+    colorRGB: "10,132,255",
+    description: "Meta's open-weight LLaMA family democratized AI research by releasing model weights publicly, enabling on-device and private deployment.",
+    models: [
+      {
+        id: "llama1", name: "LLaMA 1", shortName: "L1",
+        date: "2023-02", displayDate: "Feb 2023", type: "Language",
+        brief: { params: "7B–65B", context: "2K tokens", access: "Open" },
+        details: {
+          description: "LLaMA 1 was Meta's open-weights foundational model released for research, ranging from 7B to 65B parameters. It outperformed GPT-3 on many benchmarks despite being smaller, sparking the open-source LLM movement.",
+          parameters: "7B, 13B, 33B, 65B variants",
+          contextWindow: "2,048 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Aug 2022",
+          hardware: "7B: 8GB VRAM (consumer GPU). 13B: 16GB VRAM. 65B: 4× 80GB A100.",
+          capabilities: ["Text generation", "Code", "Reasoning", "Research base model"],
+          pricing: "Open weights (research license)",
+          notable: "Ignited the open-source LLM ecosystem; 65B matched GPT-3 at 270x fewer parameters."
+        }
+      },
+      {
+        id: "llama2", name: "LLaMA 2", shortName: "L2",
+        date: "2023-07", displayDate: "Jul 2023", type: "Language",
+        brief: { params: "7B–70B", context: "4K tokens", access: "Open" },
+        details: {
+          description: "LLaMA 2 extended context to 4K tokens, added instruction-tuned chat variants, and adopted a permissive commercial license — making it the backbone of thousands of open-source deployments.",
+          parameters: "7B, 13B, 34B, 70B variants",
+          contextWindow: "4,096 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Jan 2023",
+          hardware: "7B: 6GB VRAM (4-bit quant). 13B: 10GB VRAM. 70B: 40GB+ VRAM.",
+          capabilities: ["Chat (RLHF)", "Code", "Reasoning", "Instruction following", "Commercial use"],
+          pricing: "Open weights (commercial license)",
+          notable: "First Meta model with a commercial license; spawned Vicuna, Alpaca, and hundreds of fine-tunes."
+        }
+      },
+      {
+        id: "codellama", name: "Code Llama", shortName: "CodeL",
+        date: "2023-08", displayDate: "Aug 2023", type: "Code",
+        brief: { params: "7B–70B", context: "16K tokens", access: "Open" },
+        details: {
+          description: "Code Llama is a code-specialized derivative of LLaMA 2, fine-tuned on 500B tokens of code. It supports infilling, code completion, and a 16K context window optimized for large codebases.",
+          parameters: "7B, 13B, 34B, 70B variants",
+          contextWindow: "16,384 tokens (100K in extended version)",
+          inputTypes: ["Text", "Code"], outputTypes: ["Code", "Text"],
+          trainingCutoff: "Jan 2023",
+          hardware: "7B: 6GB VRAM (4-bit quant). 34B: 20GB VRAM.",
+          capabilities: ["Code completion", "Code infilling", "Debugging", "Python specialist (Instruct)", "Multi-language"],
+          pricing: "Open weights",
+          notable: "Best open-source code model at launch; surpassed GPT-3.5 on HumanEval."
+        }
+      },
+      {
+        id: "llama3", name: "LLaMA 3", shortName: "L3",
+        date: "2024-04", displayDate: "Apr 2024", type: "Language",
+        brief: { params: "8B–70B", context: "8K tokens", access: "Open" },
+        details: {
+          description: "LLaMA 3 represented a major quality leap — the 70B model rivaled GPT-4 on several benchmarks. It used a new 128K token vocabulary and improved instruction tuning.",
+          parameters: "8B, 70B variants",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Mar 2024",
+          hardware: "8B: 6GB VRAM (4-bit quant, ~3.5GB). 70B: 40GB+ VRAM.",
+          capabilities: ["Instruction following", "Reasoning", "Code", "Multilingual", "Chat"],
+          pricing: "Open weights (Meta Llama 3 license)",
+          notable: "70B model set new open-source benchmark records; 128K vocab for better tokenization."
+        }
+      },
+      {
+        id: "llama31", name: "LLaMA 3.1", shortName: "L3.1",
+        date: "2024-07", displayDate: "Jul 2024", type: "Language",
+        brief: { params: "8B–405B", context: "128K tokens", access: "Open" },
+        details: {
+          description: "LLaMA 3.1 introduced the 405B parameter model and expanded context to 128K tokens across all sizes. The 405B model matched GPT-4o on many tasks — the first open model to do so.",
+          parameters: "8B, 70B, 405B variants",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Jun 2024",
+          hardware: "8B: 6GB VRAM. 70B: 40GB VRAM. 405B: 8× 80GB A100 (≈640GB VRAM).",
+          capabilities: ["128K context", "Tool use", "Multilingual (8 languages)", "Reasoning", "Code", "Long document analysis"],
+          pricing: "Open weights",
+          notable: "405B matched GPT-4o on MMLU; largest open-weight model with 128K context at launch."
+        }
+      },
+      {
+        id: "llama32", name: "LLaMA 3.2", shortName: "L3.2",
+        date: "2024-09", displayDate: "Sep 2024", type: "Multimodal",
+        brief: { params: "1B–90B", context: "128K tokens", access: "Open" },
+        details: {
+          description: "LLaMA 3.2 added vision capabilities (11B and 90B vision models) and ultra-small edge models (1B and 3B) for on-device deployment on phones and embedded hardware.",
+          parameters: "1B, 3B (text-only); 11B, 90B (vision)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image (11B/90B)"], outputTypes: ["Text"],
+          trainingCutoff: "Jul 2024",
+          hardware: "1B/3B: runs on smartphones (4GB RAM). 11B: consumer GPU (16GB VRAM). 90B: 2× 80GB A100.",
+          capabilities: ["Vision understanding", "On-device inference", "Multilingual", "Code", "Instruction following"],
+          pricing: "Open weights",
+          notable: "1B/3B models run natively on Apple Silicon M-series chips and Android."
+        }
+      },
+      {
+        id: "llama33", name: "LLaMA 3.3", shortName: "L3.3",
+        date: "2024-12", displayDate: "Dec 2024", type: "Language",
+        brief: { params: "70B", context: "128K tokens", access: "Open" },
+        details: {
+          description: "LLaMA 3.3 70B distills improvements from the 405B model into the 70B size, achieving 405B-level performance with greatly reduced compute requirements.",
+          parameters: "70B",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2024",
+          hardware: "40GB VRAM (or ~20GB with 4-bit quantization).",
+          capabilities: ["Reasoning", "Code", "Instruction following", "Multilingual", "Tool use"],
+          pricing: "Open weights",
+          notable: "Matches 405B performance at 70B scale — best efficiency in LLaMA family."
+        }
+      },
+      {
+        id: "llama4", name: "LLaMA 4", shortName: "L4",
+        date: "2025-04", displayDate: "Apr 2025", type: "Multimodal",
+        brief: { params: "Scout/Maverick/Behemoth", context: "10M tokens", access: "Open" },
+        details: {
+          description: "LLaMA 4 introduced a mixture-of-experts architecture and three variants: Scout (17B active/109B total), Maverick (17B active/400B total), and Behemoth (~2T total). Scout's 10M token context window is the largest of any model.",
+          parameters: "Scout: 17B active (109B total). Maverick: 17B active (~400B total). Behemoth: ~288B active (~2T total).",
+          contextWindow: "10,000,000 tokens (Scout); 1M (Maverick)",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Dec 2024 (est.)",
+          hardware: "Scout: 40GB VRAM. Maverick: 8× 80GB A100. Behemoth: large cluster.",
+          capabilities: ["10M context", "MoE efficiency", "Vision", "Multilingual", "Reasoning", "Code"],
+          pricing: "Open weights (llama4 license)",
+          notable: "Scout's 10M token context is the largest of any public model."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     MISTRAL AI
+  ────────────────────────────────────────── */
+  {
+    id: "mistral",
+    name: "Mistral AI",
+    color: "#ff7043",
+    colorRGB: "255,112,67",
+    description: "European AI startup known for efficient, high-performance open-weight models and the Mixtral sparse MoE architecture.",
+    models: [
+      {
+        id: "mistral7b", name: "Mistral 7B", shortName: "M7B",
+        date: "2023-09", displayDate: "Sep 2023", type: "Language",
+        brief: { params: "7B", context: "32K tokens", access: "Open" },
+        details: {
+          description: "Mistral 7B stunned the AI community by outperforming LLaMA 2 13B on all benchmarks and matching LLaMA 2 34B on many, despite having far fewer parameters. Used Grouped Query Attention and Sliding Window Attention.",
+          parameters: "7.3 billion",
+          contextWindow: "32,768 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Early 2023",
+          hardware: "4–6GB VRAM (4-bit quant), 14GB VRAM (full precision).",
+          capabilities: ["Text generation", "Instruction following", "Code", "Reasoning", "Fast inference"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "Outperforms every prior 7B model; established Mistral as a top open-source AI lab."
+        }
+      },
+      {
+        id: "mixtral8x7b", name: "Mixtral 8×7B", shortName: "MxT 8×7",
+        date: "2023-12", displayDate: "Dec 2023", type: "Language",
+        brief: { params: "46.7B (12.9B active)", context: "32K tokens", access: "Open" },
+        details: {
+          description: "Mixtral 8×7B introduced sparse Mixture of Experts to open-source AI. Only 2 of 8 expert networks activate per token, delivering 70B-level quality while using only ~13B parameters of compute.",
+          parameters: "46.7B total, 12.9B active per forward pass",
+          contextWindow: "32,768 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Late 2023",
+          hardware: "~24GB VRAM (4-bit quant), 90GB VRAM (full bfloat16).",
+          capabilities: ["MoE efficiency", "Code", "Multilingual (5 languages)", "Instruction following", "Reasoning"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "First open-source Mixture of Experts model; matches GPT-3.5 at ~2x the speed."
+        }
+      },
+      {
+        id: "mistral-large", name: "Mistral Large", shortName: "M-Lg",
+        date: "2024-02", displayDate: "Feb 2024", type: "Language",
+        brief: { params: "~123B (est.)", context: "32K tokens", access: "API" },
+        details: {
+          description: "Mistral Large is Mistral's first flagship proprietary model, ranking 2nd only to GPT-4 at its launch. Native multilingual (English, French, Spanish, German, Italian) with strong reasoning and function calling.",
+          parameters: "~123 billion (estimated)",
+          contextWindow: "32,768 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Late 2023",
+          hardware: "Cloud only (Mistral API / La Plateforme).",
+          capabilities: ["Reasoning", "Multilingual", "Code", "Function calling", "Long context"],
+          pricing: "$4/M input · $12/M output",
+          notable: "Ranked #2 globally on LMSys Arena at launch; native 5-language support."
+        }
+      },
+      {
+        id: "codestral", name: "Codestral", shortName: "CdStr",
+        date: "2024-05", displayDate: "May 2024", type: "Code",
+        brief: { params: "22B", context: "32K tokens", access: "Open" },
+        details: {
+          description: "Codestral is Mistral's specialized code model trained on 80+ programming languages. It supports fill-in-the-middle (FIM) tasks and is integrated into Cursor, VS Code, and JetBrains IDEs.",
+          parameters: "22 billion",
+          contextWindow: "32,768 tokens",
+          inputTypes: ["Text", "Code"], outputTypes: ["Code", "Text"],
+          trainingCutoff: "Early 2024",
+          hardware: "~16GB VRAM (4-bit quant ~12GB).",
+          capabilities: ["80+ programming languages", "Fill-in-middle", "Code completion", "Bug fixing", "Test generation"],
+          pricing: "Open weights (non-commercial) / API available",
+          notable: "Best open-source code model at launch; supports 80+ languages including Fortran, COBOL."
+        }
+      },
+      {
+        id: "mistral-large2", name: "Mistral Large 2", shortName: "M-Lg2",
+        date: "2024-07", displayDate: "Jul 2024", type: "Language",
+        brief: { params: "~123B (est.)", context: "128K tokens", access: "API" },
+        details: {
+          description: "Mistral Large 2 significantly improved on Mistral Large with a 128K context window, stronger coding in 80+ languages, and better reasoning benchmarks. It matched Claude 3.5 Sonnet and GPT-4o on many tests.",
+          parameters: "~123 billion (estimated)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "May 2024",
+          hardware: "Cloud only (Mistral API).",
+          capabilities: ["128K context", "Code (80+ languages)", "Reasoning", "Function calling", "Multilingual"],
+          pricing: "$3/M input · $9/M output",
+          notable: "Matched GPT-4o on MMLU; best European-built model at launch."
+        }
+      },
+      {
+        id: "pixtral12b", name: "Pixtral 12B", shortName: "Pxtrl",
+        date: "2024-09", displayDate: "Sep 2024", type: "Vision",
+        brief: { params: "12B", context: "128K tokens", access: "Open" },
+        details: {
+          description: "Pixtral 12B is Mistral's first multimodal model, combining a 400M vision encoder with a 12B language model. It can process multiple images at native resolution, and is fully open-weight.",
+          parameters: "12 billion (12B LLM + 400M vision encoder)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image (multiple, native resolution)"], outputTypes: ["Text"],
+          trainingCutoff: "Jul 2024",
+          hardware: "~16GB VRAM (full), ~8GB (4-bit quant).",
+          capabilities: ["Multi-image understanding", "Native resolution", "OCR", "Charts & diagrams", "Visual reasoning"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "First open-weight multimodal model to handle multiple images at native resolution."
+        }
+      },
+      {
+        id: "mistral-small3", name: "Mistral Small 3", shortName: "MS3",
+        date: "2025-01", displayDate: "Jan 2025", type: "Language",
+        brief: { params: "24B", context: "32K tokens", access: "Open" },
+        details: {
+          description: "Mistral Small 3 is a highly efficient 24B model that dramatically outperforms all prior models at its size class, approaching Mistral Large 2 quality while being deployable on a single consumer GPU.",
+          parameters: "24 billion",
+          contextWindow: "32,768 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Nov 2024",
+          hardware: "~16GB VRAM (full bfloat16), ~10GB (4-bit quant).",
+          capabilities: ["Instruction following", "Code", "Reasoning", "Fast inference", "Function calling"],
+          pricing: "Open weights (Apache 2.0) / API: $0.10/M input",
+          notable: "Runs fully on a single RTX 4090 consumer GPU — enterprise-grade quality."
+        }
+      },
+      {
+        id: "mistral-small31", name: "Mistral Small 3.1", shortName: "MS3.1",
+        date: "2025-03", displayDate: "Mar 2025", type: "Multimodal",
+        brief: { params: "24B", context: "128K tokens", access: "Open" },
+        details: {
+          description: "Mistral Small 3.1 upgrades the Small 3 with vision capabilities and a 128K context window. It's the most capable open-weight sub-30B multimodal model, surpassing GPT-4o-mini on vision tasks.",
+          parameters: "24 billion",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Jan 2025",
+          hardware: "~16GB VRAM (full), ~10GB (4-bit quant).",
+          capabilities: ["Vision", "128K context", "Code", "Reasoning", "Function calling", "On-prem deployment"],
+          pricing: "Open weights (Apache 2.0) / API: $0.10/M input",
+          notable: "Best sub-30B open multimodal model; beats GPT-4o-mini on vision benchmarks."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     xAI (GROK)
+  ────────────────────────────────────────── */
+  {
+    id: "xai",
+    name: "xAI (Grok)",
+    color: "#e0e0e0",
+    colorRGB: "224,224,224",
+    description: "Elon Musk's AI company building the Grok family with real-time X (Twitter) data access and an unfiltered, witty personality.",
+    models: [
+      {
+        id: "grok1", name: "Grok-1", shortName: "Grok-1",
+        date: "2023-11", displayDate: "Nov 2023", type: "Language",
+        brief: { params: "314B (MoE)", context: "8K tokens", access: "Open" },
+        details: {
+          description: "Grok-1 is xAI's first model, a 314B Mixture-of-Experts model with real-time access to X (Twitter) data. It was later fully open-sourced under Apache 2.0 in March 2024.",
+          parameters: "314 billion total, ~86B active (MoE)",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2023 (with live X feed)",
+          hardware: "Cloud only initially; 8× H100s needed for full inference after open-source release.",
+          capabilities: ["Conversation", "Real-time X data", "Code", "Humor/personality", "Reasoning"],
+          pricing: "Open weights (Apache 2.0) after Mar 2024",
+          notable: "Open-sourced in full at 314B — largest open-weights MoE model at time of release."
+        }
+      },
+      {
+        id: "grok15", name: "Grok-1.5", shortName: "Grok-1.5",
+        date: "2024-04", displayDate: "Apr 2024", type: "Language",
+        brief: { params: "Unknown", context: "128K tokens", access: "API" },
+        details: {
+          description: "Grok-1.5 extended context to 128K tokens and showed major improvements in math and coding, nearly matching Claude 3 Sonnet on benchmarks. Still available through X Premium+.",
+          parameters: "Undisclosed",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Mar 2024 (with live X feed)",
+          hardware: "Cloud only (X/Grok API).",
+          capabilities: ["128K context", "Math", "Code", "Real-time X data", "Reasoning"],
+          pricing: "Available with X Premium subscription",
+          notable: "128K context with live internet via X — combined long context and real-time info."
+        }
+      },
+      {
+        id: "grok15v", name: "Grok-1.5 Vision", shortName: "G1.5V",
+        date: "2024-04", displayDate: "Apr 2024", type: "Vision",
+        brief: { params: "Unknown", context: "128K tokens", access: "API" },
+        details: {
+          description: "Grok-1.5 Vision added multimodal understanding to Grok, enabling image analysis, document understanding, and chart interpretation alongside text.",
+          parameters: "Undisclosed",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Mar 2024",
+          hardware: "Cloud only (X/Grok API).",
+          capabilities: ["Image understanding", "Document analysis", "Chart reading", "Text generation", "Real-time X data"],
+          pricing: "Available with X Premium subscription",
+          notable: "First Grok model with vision capabilities."
+        }
+      },
+      {
+        id: "grok2", name: "Grok-2", shortName: "Grok-2",
+        date: "2024-08", displayDate: "Aug 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "128K tokens", access: "API" },
+        details: {
+          description: "Grok-2 featured significant performance gains and integrated FLUX.1 image generation. It topped LMSys leaderboard for several weeks and matched Claude 3.5 Sonnet on coding benchmarks.",
+          parameters: "Undisclosed",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text", "Image (via FLUX.1)"],
+          trainingCutoff: "Jul 2024 (with live X feed)",
+          hardware: "Cloud only (xAI API).",
+          capabilities: ["Image generation (FLUX.1)", "Vision", "Code", "Real-time web", "Math", "Reasoning"],
+          pricing: "Available via API / X Premium",
+          notable: "First LLM to natively integrate FLUX.1 photorealistic image generation."
+        }
+      },
+      {
+        id: "grok3", name: "Grok-3", shortName: "Grok-3",
+        date: "2025-02", displayDate: "Feb 2025", type: "Reasoning",
+        brief: { params: "Unknown", context: "131K tokens", access: "API" },
+        details: {
+          description: "Grok-3 was trained on a 200,000 GPU cluster and introduces Think mode for extended chain-of-thought reasoning. It topped math, science, and coding benchmarks at launch, exceeding GPT-4o and Gemini 2.0 Pro.",
+          parameters: "Undisclosed (trained on 200K GPU cluster)",
+          contextWindow: "131,072 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Dec 2024 (with live X feed)",
+          hardware: "Cloud only (xAI API).",
+          capabilities: ["Think mode (reasoning)", "Math", "Code", "Science", "Vision", "Real-time search", "DeepSearch"],
+          pricing: "Available via X Premium+ / xAI API",
+          notable: "Trained on a 200K H100 GPU cluster — largest training run for any model at launch."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     DEEPSEEK
+  ────────────────────────────────────────── */
+  {
+    id: "deepseek",
+    name: "DeepSeek",
+    color: "#7c6aff",
+    colorRGB: "124,106,255",
+    description: "Chinese AI lab (Hangzhou DeepSeek AI) that disrupted the industry with ultra-efficient models trained at a fraction of competitors' costs.",
+    models: [
+      {
+        id: "ds-llm", name: "DeepSeek-LLM", shortName: "DS-LLM",
+        date: "2023-11", displayDate: "Nov 2023", type: "Language",
+        brief: { params: "7B / 67B", context: "4K tokens", access: "Open" },
+        details: {
+          description: "DeepSeek's first open-weight language models (7B and 67B), competitive with LLaMA 2 70B. Established DeepSeek as a serious open-source contender from China.",
+          parameters: "7B, 67B variants",
+          contextWindow: "4,096 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Sep 2023",
+          hardware: "7B: 8GB VRAM. 67B: ~40GB VRAM.",
+          capabilities: ["Text generation", "Instruction following", "Reasoning", "Code"],
+          pricing: "Open weights",
+          notable: "DeepSeek's debut — 67B model matched LLaMA 2 70B at lower training cost."
+        }
+      },
+      {
+        id: "ds-coder", name: "DeepSeek-Coder", shortName: "DS-Cdr",
+        date: "2023-12", displayDate: "Dec 2023", type: "Code",
+        brief: { params: "1B–33B", context: "16K tokens", access: "Open" },
+        details: {
+          description: "DeepSeek-Coder is a family of code-specialized models from 1B to 33B parameters, trained on 2T tokens of code from GitHub. The 33B model outperformed GPT-3.5 and Code Llama on HumanEval.",
+          parameters: "1B, 5.7B, 6.7B, 33B variants",
+          contextWindow: "16,384 tokens",
+          inputTypes: ["Text", "Code"], outputTypes: ["Code", "Text"],
+          trainingCutoff: "Nov 2023",
+          hardware: "6.7B: 8GB VRAM. 33B: 24GB VRAM.",
+          capabilities: ["87 programming languages", "Fill-in-middle", "Repo-level code", "Bug fixing", "Code completion"],
+          pricing: "Open weights",
+          notable: "33B model beat GPT-3.5 on HumanEval at a fraction of the parameter count."
+        }
+      },
+      {
+        id: "ds-v2", name: "DeepSeek-V2", shortName: "DS-V2",
+        date: "2024-05", displayDate: "May 2024", type: "Language",
+        brief: { params: "236B (21B active)", context: "128K tokens", access: "Open" },
+        details: {
+          description: "DeepSeek-V2 used Multi-head Latent Attention (MLA) and DeepSeekMoE to achieve GPT-4-level performance at 1/42nd the inference cost. Caused major disruption with API pricing as low as $0.14/M tokens.",
+          parameters: "236B total, 21B active (MoE)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Mar 2024",
+          hardware: "Cloud/API. Self-host: ~40GB VRAM with MLA optimization.",
+          capabilities: ["MoE efficiency", "MLA attention", "128K context", "Code", "Math", "Chinese language"],
+          pricing: "$0.14/M input · $0.28/M output (API)",
+          notable: "API priced at 1/100th of GPT-4 — triggered an AI pricing war in China."
+        }
+      },
+      {
+        id: "ds-coderv2", name: "DeepSeek-Coder V2", shortName: "Cdr-V2",
+        date: "2024-06", displayDate: "Jun 2024", type: "Code",
+        brief: { params: "236B (21B active)", context: "128K tokens", access: "Open" },
+        details: {
+          description: "DeepSeek-Coder V2 applied the V2 MoE architecture to coding, surpassing GPT-4 Turbo on coding benchmarks and becoming the top open-source code model at launch.",
+          parameters: "236B total, 21B active (MoE)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text", "Code"], outputTypes: ["Code", "Text"],
+          trainingCutoff: "Apr 2024",
+          hardware: "API or self-hosted MoE (~40GB VRAM active).",
+          capabilities: ["338 programming languages", "Code generation", "Reasoning", "Math", "Fill-in-middle"],
+          pricing: "Open weights / API available",
+          notable: "Surpassed GPT-4 Turbo on LiveCodeBench — best open-source code model at launch."
+        }
+      },
+      {
+        id: "ds-v3", name: "DeepSeek-V3", shortName: "DS-V3",
+        date: "2024-12", displayDate: "Dec 2024", type: "Language",
+        brief: { params: "671B (37B active)", context: "128K tokens", access: "Open" },
+        details: {
+          description: "DeepSeek-V3 matched GPT-4o and Claude 3.5 Sonnet while reportedly costing only ~$5.5M to train — a landmark achievement for training efficiency. Uses FP8 mixed precision and pipeline parallelism.",
+          parameters: "671B total, 37B active (MoE)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2024",
+          hardware: "2,048× H800 GPUs for training. API or 4× 80GB A100 for self-host inference.",
+          capabilities: ["Code", "Math", "Reasoning", "Multilingual", "Function calling", "FP8 training"],
+          pricing: "$0.27/M input · $1.10/M output",
+          notable: "Trained in 2.788M H800 GPU-hours for ~$5.5M — 50x cheaper than comparable western models."
+        }
+      },
+      {
+        id: "ds-r1", name: "DeepSeek-R1", shortName: "DS-R1",
+        date: "2025-01", displayDate: "Jan 2025", type: "Reasoning",
+        brief: { params: "671B (37B active)", context: "128K tokens", access: "Open" },
+        details: {
+          description: "DeepSeek-R1 is a fully open-source reasoning model matching o1 performance at dramatically lower cost. Trained purely via reinforcement learning (GRPO) with no supervised fine-tuning — emerging chain-of-thought reasoning from RL alone.",
+          parameters: "671B total, 37B active (MoE). Distilled versions: 1.5B–70B.",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2024",
+          hardware: "Full model: cloud/large cluster. R1-Distill-7B: 8GB VRAM. R1-Distill-70B: 40GB VRAM.",
+          capabilities: ["Chain-of-thought reasoning", "Math", "Code", "Science", "Fully open (MIT)", "Distilled versions"],
+          pricing: "$0.55/M input · $2.19/M output (full). Distilled versions: free open weights.",
+          notable: "MIT-licensed; reasoning emerges purely from RL — no CoT supervision. Shocked the AI industry."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     COHERE
+  ────────────────────────────────────────── */
+  {
+    id: "cohere",
+    name: "Cohere",
+    color: "#39d353",
+    colorRGB: "57,211,83",
+    description: "Enterprise-focused AI company specializing in RAG, retrieval, search, and the Command model family for business applications.",
+    models: [
+      {
+        id: "command", name: "Command", shortName: "CMD",
+        date: "2022-01", displayDate: "Jan 2022", type: "Language",
+        brief: { params: "~52B (est.)", context: "4K tokens", access: "API" },
+        details: {
+          description: "Cohere Command was an early enterprise-grade language model focused on instruction following and business text tasks before ChatGPT popularized the space.",
+          parameters: "~52 billion (estimated)",
+          contextWindow: "4,096 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Late 2021",
+          hardware: "Cloud only (Cohere API).",
+          capabilities: ["Text generation", "Summarization", "Classification", "Extraction"],
+          pricing: "Enterprise pricing",
+          notable: "Pre-ChatGPT enterprise LLM focused on instruction following."
+        }
+      },
+      {
+        id: "commandr", name: "Command R", shortName: "CMD-R",
+        date: "2024-03", displayDate: "Mar 2024", type: "Language",
+        brief: { params: "35B", context: "128K tokens", access: "Open" },
+        brief: { params: "35B", context: "128K tokens", access: "Open" },
+        details: {
+          description: "Command R is a 35B model purpose-built for Retrieval Augmented Generation (RAG) and tool use at scale. Features grounded generation with citations and supports 10 languages.",
+          parameters: "35 billion",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Jan 2024",
+          hardware: "~20GB VRAM (4-bit quant ~10GB). Self-hostable.",
+          capabilities: ["RAG with citations", "Tool use", "10 languages", "Conversation", "Code"],
+          pricing: "Open weights / $0.15/M input (API)",
+          notable: "Purpose-built for RAG; grounded citations prevent hallucination in enterprise docs."
+        }
+      },
+      {
+        id: "commandrplus", name: "Command R+", shortName: "CMD-R+",
+        date: "2024-04", displayDate: "Apr 2024", type: "Language",
+        brief: { params: "~104B (est.)", context: "128K tokens", access: "Open" },
+        details: {
+          description: "Command R+ is the enterprise-tier upgrade to Command R, matching GPT-4 on RAG benchmarks. Supports 10 languages and complex multi-step tool use for enterprise workflows.",
+          parameters: "~104 billion (estimated)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Feb 2024",
+          hardware: "~60GB VRAM (4-bit quant). Best via API.",
+          capabilities: ["Advanced RAG", "Multi-step tool use", "10 languages", "Code", "Reasoning", "Grounded generation"],
+          pricing: "Open weights / $3/M input (API)",
+          notable: "Best RAG model at launch; matched GPT-4 on document grounding benchmarks."
+        }
+      },
+      {
+        id: "aya23", name: "Aya 23", shortName: "Aya 23",
+        date: "2024-05", displayDate: "May 2024", type: "Language",
+        brief: { params: "8B / 35B", context: "8K tokens", access: "Open" },
+        details: {
+          description: "Aya 23 is Cohere's open multilingual model covering 23 languages, with particular strength in low-resource languages. Built with global inclusion in mind by the Aya research initiative.",
+          parameters: "8B, 35B variants",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Mar 2024",
+          hardware: "8B: 8GB VRAM. 35B: 20GB VRAM.",
+          capabilities: ["23 languages", "Low-resource language support", "Instruction following", "Translation"],
+          pricing: "Open weights",
+          notable: "Supports 23 languages including many underrepresented in AI (Arabic, Hindi, Yoruba, etc.)."
+        }
+      },
+      {
+        id: "commandA", name: "Command A", shortName: "CMD-A",
+        date: "2025-03", displayDate: "Mar 2025", type: "Language",
+        brief: { params: "111B", context: "256K tokens", access: "Open" },
+        details: {
+          description: "Command A is Cohere's most capable model, featuring a 256K context window, advanced multi-step agentic capabilities, and enterprise security features. It runs efficiently on just 2× H100 GPUs.",
+          parameters: "111 billion",
+          contextWindow: "256,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Jan 2025",
+          hardware: "Optimized for 2× H100 80GB GPUs (~160GB VRAM). Also available via API.",
+          capabilities: ["256K context", "Agentic workflows", "RAG", "Tool use", "10+ languages", "Enterprise security"],
+          pricing: "Open weights / API pricing available",
+          notable: "Designed to run efficiently on 2× H100 GPUs — on-premises enterprise deployment."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     AMAZON
+  ────────────────────────────────────────── */
+  {
+    id: "amazon",
+    name: "Amazon",
+    color: "#ff9900",
+    colorRGB: "255,153,0",
+    description: "Amazon's Nova and Titan model families built for AWS Bedrock, optimized for enterprise cloud workloads and cost efficiency.",
+    models: [
+      {
+        id: "titan-text", name: "Titan Text Express", shortName: "Titan",
+        date: "2023-09", displayDate: "Sep 2023", type: "Language",
+        brief: { params: "Unknown", context: "8K tokens", access: "API" },
+        details: {
+          description: "Amazon Titan Text Express was Amazon's first proprietary LLM, available exclusively through AWS Bedrock. Built for enterprise text generation with a focus on safety and AWS integration.",
+          parameters: "Undisclosed",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Mid 2023",
+          hardware: "Cloud only (AWS Bedrock).",
+          capabilities: ["Text generation", "Summarization", "Q&A", "Classification", "AWS integration"],
+          pricing: "$0.20/M input · $0.65/M output (Bedrock)",
+          notable: "First Amazon proprietary model; tightly integrated with AWS services."
+        }
+      },
+      {
+        id: "titan-embed", name: "Titan Embeddings V2", shortName: "TitanE",
+        date: "2024-04", displayDate: "Apr 2024", type: "Embedding",
+        brief: { params: "Unknown", context: "8K tokens", access: "API" },
+        details: {
+          description: "Amazon Titan Embeddings V2 generates text embeddings optimized for RAG and semantic search, with adjustable output dimensions and native AWS integration with Kendra and OpenSearch.",
+          parameters: "Undisclosed",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Vector (256, 512, or 1024 dims)"],
+          trainingCutoff: "Late 2023",
+          hardware: "Cloud only (AWS Bedrock).",
+          capabilities: ["Semantic search", "RAG embeddings", "Clustering", "Adjustable dimensions", "Native AWS integration"],
+          pricing: "$0.02/M tokens",
+          notable: "Adjustable output dimensions (256/512/1024) for storage/accuracy tradeoffs."
+        }
+      },
+      {
+        id: "nova-micro", name: "Nova Micro", shortName: "N-Micro",
+        date: "2024-11", displayDate: "Nov 2024", type: "Language",
+        brief: { params: "Unknown", context: "128K tokens", access: "API" },
+        details: {
+          description: "Amazon Nova Micro is Amazon's fastest and cheapest model — text-only, optimized for low-latency summarization, classification, and extraction at scale.",
+          parameters: "Undisclosed (smallest Nova model)",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Sep 2024",
+          hardware: "Cloud only (AWS Bedrock).",
+          capabilities: ["Ultra-fast inference", "Summarization", "Classification", "Extraction", "Instruction following"],
+          pricing: "$0.035/M input · $0.14/M output",
+          notable: "Cheapest and fastest Amazon model — designed for massive-scale pipelines."
+        }
+      },
+      {
+        id: "nova-lite", name: "Nova Lite", shortName: "N-Lite",
+        date: "2024-11", displayDate: "Nov 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "300K tokens", access: "API" },
+        details: {
+          description: "Nova Lite is a cost-efficient multimodal model (text, image, video) with a 300K context window. It balances capability and cost for enterprise visual understanding tasks.",
+          parameters: "Undisclosed",
+          contextWindow: "300,000 tokens",
+          inputTypes: ["Text", "Image", "Video", "Document"], outputTypes: ["Text"],
+          trainingCutoff: "Sep 2024",
+          hardware: "Cloud only (AWS Bedrock).",
+          capabilities: ["Image understanding", "Video analysis", "Document processing", "300K context", "Fast multimodal"],
+          pricing: "$0.06/M input · $0.24/M output",
+          notable: "Accepts video input — one of few models to natively support video frames."
+        }
+      },
+      {
+        id: "nova-pro", name: "Nova Pro", shortName: "N-Pro",
+        date: "2024-11", displayDate: "Nov 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "300K tokens", access: "API" },
+        details: {
+          description: "Nova Pro is Amazon's flagship multimodal model combining text, image, and video understanding with strong reasoning and agentic capabilities for complex enterprise workflows.",
+          parameters: "Undisclosed (flagship Nova)",
+          contextWindow: "300,000 tokens",
+          inputTypes: ["Text", "Image", "Video", "Document"], outputTypes: ["Text"],
+          trainingCutoff: "Sep 2024",
+          hardware: "Cloud only (AWS Bedrock).",
+          capabilities: ["Complex reasoning", "Agentic tasks", "Video", "Image", "Code", "Tool use", "AWS Bedrock Agents"],
+          pricing: "$0.80/M input · $3.20/M output",
+          notable: "Powers Amazon Bedrock Agents — deep integration with AWS Lambda, S3, and tools."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     OLLAMA (Open Source / Local)
+  ────────────────────────────────────────── */
+  {
+    id: "ollama",
+    name: "Ollama",
+    color: "#9d4edd",
+    colorRGB: "157,78,221",
+    description: "Ollama is the leading tool for running open-source LLMs locally. Shown here: the most popular models in the Ollama ecosystem by provider.",
+    models: [
+      {
+        id: "phi2", name: "Phi-2 (Microsoft)", shortName: "Phi-2",
+        date: "2023-12", displayDate: "Dec 2023", type: "Language",
+        brief: { params: "2.7B", context: "2K tokens", access: "Local" },
+        details: {
+          description: "Microsoft's Phi-2 is a 2.7B model that outperforms models up to 13B on language understanding and reasoning, using high-quality 'textbook-quality' training data rather than brute-force scale.",
+          parameters: "2.7 billion",
+          contextWindow: "2,048 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Sep 2023",
+          hardware: "2GB VRAM / runs on CPU. Apple M1/M2 with 8GB RAM works well.",
+          capabilities: ["Reasoning", "Code", "Math (basic)", "Fast inference", "Edge deployment"],
+          pricing: "Open weights (MIT)",
+          notable: "Outperforms 7B models on many reasoning tasks — quality over quantity training approach."
+        }
+      },
+      {
+        id: "gemma2b", name: "Gemma 2B/7B (Google)", shortName: "Gemma",
+        date: "2024-02", displayDate: "Feb 2024", type: "Language",
+        brief: { params: "2B / 7B", context: "8K tokens", access: "Local" },
+        details: {
+          description: "Google's Gemma models are lightweight open-weight models derived from Gemini's training process. Available in 2B and 7B, they run efficiently on consumer hardware with strong multilingual support.",
+          parameters: "2B, 7B variants",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Dec 2023",
+          hardware: "2B: 4GB VRAM / M1 8GB RAM. 7B: 8GB VRAM.",
+          capabilities: ["Instruction following", "Code", "Reasoning", "Text generation"],
+          pricing: "Open weights (Gemma Terms of Use)",
+          notable: "Built from Gemini's knowledge; best-in-class open model from Google at launch."
+        }
+      },
+      {
+        id: "phi3", name: "Phi-3 (Microsoft)", shortName: "Phi-3",
+        date: "2024-04", displayDate: "Apr 2024", type: "Language",
+        brief: { params: "3.8B / 14B", context: "128K tokens", access: "Local" },
+        details: {
+          description: "Phi-3 Mini (3.8B) outperformed models 3x its size on language understanding and reasoning, and was the first small model to match Mixtral 8x7B quality at a fraction of the compute.",
+          parameters: "3.8B (Mini), 7B (Small), 14B (Medium)",
+          contextWindow: "128,000 tokens (Mini with long context)",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Feb 2024",
+          hardware: "Mini 3.8B: 3GB VRAM. 14B: 10GB VRAM (4-bit quant).",
+          capabilities: ["Reasoning", "Math", "Code", "128K context", "On-device AI"],
+          pricing: "Open weights (MIT)",
+          notable: "3.8B model surpasses Mixtral 8×7B on many benchmarks — paradigm shift in small models."
+        }
+      },
+      {
+        id: "qwen2", name: "Qwen2 (Alibaba)", shortName: "Qwen2",
+        date: "2024-06", displayDate: "Jun 2024", type: "Language",
+        brief: { params: "0.5B–72B", context: "128K tokens", access: "Local" },
+        details: {
+          description: "Alibaba's Qwen2 family ranges from 0.5B to 72B parameters with a 128K context window. The 72B model rivaled LLaMA 3 70B and GPT-4o mini on benchmarks, with strong Chinese and English capability.",
+          parameters: "0.5B, 1.5B, 7B, 57B-MoE, 72B",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Mar 2024",
+          hardware: "7B: 8GB VRAM. 72B: 40GB VRAM (full) / 20GB (4-bit).",
+          capabilities: ["Bilingual Chinese/English", "Code", "Math", "Instruction following", "Tool use"],
+          pricing: "Open weights (Apache 2.0 for smaller; Qwen license for 72B)",
+          notable: "72B model with 128K context beats GPT-4o-mini; best Chinese-English bilingual open model."
+        }
+      },
+      {
+        id: "gemma2", name: "Gemma 2 (Google)", shortName: "Gemma2",
+        date: "2024-06", displayDate: "Jun 2024", type: "Language",
+        brief: { params: "2B–27B", context: "8K tokens", access: "Local" },
+        details: {
+          description: "Gemma 2 improved dramatically over Gemma 1, with the 27B model matching or exceeding Llama 3 70B on key benchmarks. Uses interleaved local/global attention and knowledge distillation.",
+          parameters: "2B, 9B, 27B variants",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Apr 2024",
+          hardware: "2B: 3GB VRAM. 9B: 8GB VRAM. 27B: 18GB VRAM.",
+          capabilities: ["Reasoning", "Code", "Math", "Instruction following", "Knowledge distillation"],
+          pricing: "Open weights (Gemma Terms of Use)",
+          notable: "27B model matched LLaMA 3 70B — unprecedented efficiency at this scale."
+        }
+      },
+      {
+        id: "qwen25", name: "Qwen2.5 (Alibaba)", shortName: "Qwen2.5",
+        date: "2024-09", displayDate: "Sep 2024", type: "Language",
+        brief: { params: "0.5B–72B", context: "128K tokens", access: "Local" },
+        details: {
+          description: "Qwen2.5 upgraded the Qwen2 family with significantly better instruction following, coding, and math. The 72B model approached Claude 3.5 Sonnet performance with fully open weights.",
+          parameters: "0.5B, 1.5B, 3B, 7B, 14B, 32B, 72B variants",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Jun 2024",
+          hardware: "7B: 6GB VRAM. 32B: 20GB VRAM. 72B: 40GB VRAM.",
+          capabilities: ["Code (Qwen2.5-Coder)", "Math (Qwen2.5-Math)", "Multilingual (29 languages)", "Instruction following"],
+          pricing: "Open weights (Apache 2.0 up to 32B)",
+          notable: "Best non-LLaMA open-weight family at 7B–72B scale; specialized Math and Coder variants."
+        }
+      },
+      {
+        id: "phi4", name: "Phi-4 (Microsoft)", shortName: "Phi-4",
+        date: "2024-12", displayDate: "Dec 2024", type: "Language",
+        brief: { params: "14B", context: "16K tokens", access: "Local" },
+        details: {
+          description: "Phi-4 is Microsoft's most capable small model (14B), trained primarily on synthetic data. It surpasses GPT-4o on MATH and GPQA benchmarks despite being 100x smaller.",
+          parameters: "14 billion",
+          contextWindow: "16,384 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Jul 2024",
+          hardware: "~10GB VRAM (4-bit quant ~8GB). Runs on M2 MacBook Pro.",
+          capabilities: ["Math (top 14B model)", "Reasoning", "Code", "Science", "Instruction following"],
+          pricing: "Open weights (MIT)",
+          notable: "Surpasses GPT-4o on MATH and GPQA benchmarks at 14B — small model SOTA."
+        }
+      },
+      {
+        id: "dsr1-distill", name: "DeepSeek-R1 Distill", shortName: "R1-7B",
+        date: "2025-01", displayDate: "Jan 2025", type: "Reasoning",
+        brief: { params: "1.5B–70B", context: "128K tokens", access: "Local" },
+        details: {
+          description: "DeepSeek-R1 Distilled models transfer the reasoning capabilities of R1-671B into smaller Qwen2.5 and LLaMA3 base models. The 7B distill outperforms GPT-4o on math with only 8GB VRAM.",
+          parameters: "1.5B, 7B, 8B, 14B, 32B, 70B variants",
+          contextWindow: "128,000 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Oct 2024",
+          hardware: "7B: 8GB VRAM (4-bit: 5GB). 70B: 40GB VRAM.",
+          capabilities: ["Chain-of-thought reasoning", "Math", "Code", "Science", "On-device reasoning"],
+          pricing: "Open weights (MIT)",
+          notable: "7B distill beats GPT-4o on AMC 2024 math — reasoning at consumer-GPU scale."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     HUGGING FACE
+  ────────────────────────────────────────── */
+  {
+    id: "huggingface",
+    name: "HuggingFace",
+    color: "#ffd21e",
+    colorRGB: "255,210,30",
+    description: "The central hub of the open-source AI ecosystem. HuggingFace hosts 500K+ models and develops key open models like Zephyr, SmolLM, and the Idefics multimodal family.",
+    models: [
+      {
+        id: "bloom", name: "BLOOM 176B (BigScience)", shortName: "BLOOM",
+        date: "2022-07", displayDate: "Jul 2022", type: "Language",
+        brief: { params: "176B", context: "2K tokens", access: "Open" },
+        details: {
+          description: "BLOOM was the first open multilingual large language model with 176B parameters, trained by 1,000+ AI researchers across 70+ countries. A true community effort to create open GPT-3 alternatives.",
+          parameters: "176 billion",
+          contextWindow: "2,048 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Mid 2022",
+          hardware: "8× 80GB A100 GPUs (~640GB VRAM) for full inference.",
+          capabilities: ["46 natural languages + 13 programming languages", "Text generation", "Translation", "Summarization"],
+          pricing: "Open weights (RAIL license)",
+          notable: "Trained by 1,000+ researchers worldwide — first truly democratic large language model."
+        }
+      },
+      {
+        id: "falcon40b", name: "Falcon 40B (TII)", shortName: "Falcon",
+        date: "2023-05", displayDate: "May 2023", type: "Language",
+        brief: { params: "7B / 40B", context: "2K tokens", access: "Open" },
+        details: {
+          description: "Falcon 40B from the Technology Innovation Institute (UAE) was the top open-source model in 2023, trained on curated 1T token RefinedWeb dataset. Fully permissive Apache 2.0 license.",
+          parameters: "7B, 40B variants",
+          contextWindow: "2,048 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Apr 2023",
+          hardware: "7B: 8GB VRAM. 40B: 80GB VRAM.",
+          capabilities: ["Text generation", "Instruction following", "Code", "Multilingual"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "Top of Open LLM Leaderboard for months; RefinedWeb dataset became industry standard."
+        }
+      },
+      {
+        id: "zephyr7b", name: "Zephyr 7B (HF)", shortName: "Zephyr",
+        date: "2023-10", displayDate: "Oct 2023", type: "Language",
+        brief: { params: "7B", context: "32K tokens", access: "Open" },
+        details: {
+          description: "Zephyr 7B is a fine-tuned version of Mistral 7B by Hugging Face, using Direct Preference Optimization (DPO) instead of RLHF. It matched GPT-3.5 on MT-Bench while being fully open-source.",
+          parameters: "7 billion",
+          contextWindow: "32,768 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Sep 2023",
+          hardware: "6GB VRAM (4-bit quant ~4GB).",
+          capabilities: ["Chat", "Instruction following", "Reasoning", "DPO alignment"],
+          pricing: "Open weights (MIT)",
+          notable: "Proved DPO training works as well as RLHF — influenced alignment training across the field."
+        }
+      },
+      {
+        id: "starcoder2", name: "StarCoder2 (BigCode)", shortName: "SC2",
+        date: "2024-02", displayDate: "Feb 2024", type: "Code",
+        brief: { params: "3B–15B", context: "16K tokens", access: "Open" },
+        details: {
+          description: "StarCoder2 is a code model family from BigCode (HF + ServiceNow + Nvidia) trained on 619 programming languages. The 15B model matched CodeLlama 70B on most coding benchmarks.",
+          parameters: "3B, 7B, 15B variants",
+          contextWindow: "16,384 tokens",
+          inputTypes: ["Text", "Code"], outputTypes: ["Code", "Text"],
+          trainingCutoff: "Nov 2023",
+          hardware: "3B: 4GB VRAM. 15B: 12GB VRAM.",
+          capabilities: ["619 programming languages", "Fill-in-middle", "Code completion", "Code explanation"],
+          pricing: "Open weights (BigCode OpenRAIL-M)",
+          notable: "619 programming language support — broadest language coverage of any code model."
+        }
+      },
+      {
+        id: "smollm2", name: "SmolLM2 (HF)", shortName: "SmolLM2",
+        date: "2024-11", displayDate: "Nov 2024", type: "Language",
+        brief: { params: "135M–1.7B", context: "8K tokens", access: "Local" },
+        details: {
+          description: "SmolLM2 is Hugging Face's family of tiny language models designed for on-device inference. The 1.7B model outperforms all prior sub-2B models and runs in a browser via WebLLM.",
+          parameters: "135M, 360M, 1.7B variants",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Aug 2024",
+          hardware: "135M/360M: CPU-only, <1GB RAM. 1.7B: 2GB RAM / runs in browser.",
+          capabilities: ["In-browser inference", "Edge deployment", "Instruction following", "Math", "Code"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "Runs entirely in the browser via WebAssembly — no server needed."
+        }
+      },
+      {
+        id: "idefics3", name: "Idefics3 (HF)", shortName: "IDFC3",
+        date: "2024-08", displayDate: "Aug 2024", type: "Vision",
+        brief: { params: "8B", context: "4K tokens", access: "Open" },
+        details: {
+          description: "Idefics3 is Hugging Face's open-source multimodal model built on LLaMA 3.1, capable of OCR, chart analysis, and document understanding. It surpasses GPT-4V on DocVQA.",
+          parameters: "8 billion",
+          contextWindow: "4,096 tokens",
+          inputTypes: ["Text", "Image (multiple)"], outputTypes: ["Text"],
+          trainingCutoff: "May 2024",
+          hardware: "~10GB VRAM (bfloat16), ~6GB (4-bit quant).",
+          capabilities: ["OCR", "Chart reading", "Document understanding", "Visual QA", "Multi-image"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "Outperforms GPT-4V on DocVQA — best open multimodal model for document AI."
+        }
+      },
+      {
+        id: "smolvlm", name: "SmolVLM (HF)", shortName: "SmolVLM",
+        date: "2024-11", displayDate: "Nov 2024", type: "Vision",
+        brief: { params: "256M / 2B", context: "16K tokens", access: "Local" },
+        details: {
+          description: "SmolVLM is a tiny vision-language model that runs on smartphones and embedded devices. The 256M model achieves competitive vision QA scores while fitting in ~500MB — ideal for on-device AI apps.",
+          parameters: "256M, 2B variants",
+          contextWindow: "16,384 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Aug 2024",
+          hardware: "256M: ~500MB RAM, runs on mobile phones. 2B: 2GB RAM.",
+          capabilities: ["On-device vision", "Image captioning", "Visual QA", "Document understanding"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "First vision model small enough to run on Raspberry Pi and low-end smartphones."
+        }
+      }
+    ]
+  }
+
+]; // END PROVIDERS
+
+/* ============================================================
+   RENDER ENGINE
+============================================================ */
+let currentProvider = 0;
+
+function getProviderVars(provider) {
+  return `--accent: ${provider.color}; --glow: rgba(${provider.colorRGB},0.25);`;
+}
+
+function getBadgeClass(type) {
+  const map = {
+    Language: 'badge-lang', Multimodal: 'badge-multi', Code: 'badge-code',
+    Reasoning: 'badge-reason', Vision: 'badge-vision', Embedding: 'badge-embed', Open: 'badge-open'
+  };
+  return map[type] || 'badge-lang';
+}
+
+function formatShortName(name) {
+  // Truncate to fit the circle
+  if (name.length <= 6) return name;
+  return name.slice(0, 6);
+}
+
+function buildProviderTabs() {
+  const container = document.getElementById('provider-tabs');
+  PROVIDERS.forEach((p, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+    btn.style.setProperty('--accent', p.color);
+    btn.innerHTML = `
+      <span class="tab-dot" style="background:${p.color}"></span>
+      ${p.name}
+      <span class="tab-count">${p.models.length}</span>
+    `;
+    btn.onclick = () => switchProvider(i, btn);
+    container.appendChild(btn);
+  });
+}
+
+function switchProvider(idx, btn) {
+  currentProvider = idx;
+  // Update tabs
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Update CSS vars on root for accent color
+  const p = PROVIDERS[idx];
+  document.documentElement.style.cssText = getProviderVars(p);
+  // Re-render
+  renderProvider(idx);
+}
+
+function renderProvider(idx) {
+  const p = PROVIDERS[idx];
+  document.documentElement.style.setProperty('--accent', p.color);
+  document.documentElement.style.setProperty('--glow', `rgba(${p.colorRGB},0.25)`);
+
+  // Header
+  const hdr = document.getElementById('provider-header');
+  const sortedModels = [...p.models].sort((a, b) => b.date.localeCompare(a.date));
+  hdr.innerHTML = `
+    <div>
+      <div class="provider-name-large">${p.name}</div>
+      <div class="provider-desc">${p.description}</div>
+    </div>
+    <div class="provider-stats">
+      <strong>${p.models.length}</strong>
+      models tracked
+    </div>
+  `;
+  hdr.style.animation = 'none';
+  setTimeout(() => hdr.style.animation = '', 10);
+
+  // Timeline
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = '';
+
+  // Group by year for year markers
+  let currentYear = null;
+  sortedModels.forEach((model, i) => {
+    const year = model.date.slice(0, 4);
+    if (year !== currentYear) {
+      currentYear = year;
+      const ym = document.createElement('div');
+      ym.className = 'year-marker';
+      ym.innerHTML = `<span>◆ ${year} ◆</span>`;
+      tl.appendChild(ym);
+    }
+
+    const item = document.createElement('div');
+    item.className = 'tl-item';
+    item.style.animationDelay = `${i * 0.06}s`;
+
+    const shortLabel = model.shortName || formatShortName(model.name);
+
+    item.innerHTML = `
+      <div class="tl-connector"></div>
+      <div class="tl-node" title="${model.name}">
+        <div class="tl-node-inner">${shortLabel}</div>
+      </div>
+      <div class="tl-card-side">
+        <div class="tl-card">
+          <div class="card-model-name">${model.name}</div>
+          <div class="card-date-row">
+            <span class="card-date">${model.displayDate}</span>
+            <span class="badge ${getBadgeClass(model.type)}">${model.type}</span>
+          </div>
+          <div class="card-stats">
+            <div class="stat-item">Params: <span>${model.brief.params}</span></div>
+            <div class="stat-item">Context: <span>${model.brief.context}</span></div>
+            <div class="stat-item">Access: <span>${model.brief.access}</span></div>
+          </div>
+          <div class="card-footer">
+            <button class="btn-dive" onclick="openModal('${model.id}', ${idx})">Deep Dive →</button>
+          </div>
+        </div>
+      </div>
+    `;
+    tl.appendChild(item);
+  });
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openModal(modelId, providerIdx) {
+  const p = PROVIDERS[providerIdx];
+  const model = p.models.find(m => m.id === modelId);
+  if (!model) return;
+
+  document.getElementById('modal-provider').textContent = `// ${p.name.toUpperCase()}`;
+  document.getElementById('modal-name').textContent = model.name;
+  document.getElementById('modal-date').textContent = `Released: ${model.displayDate}`;
+
+  const d = model.details;
+  const capsHTML = (d.capabilities || []).map(c => `<span class="cap-tag">${c}</span>`).join('');
+  const inputHTML = (d.inputTypes || []).map(t => `<span class="cap-tag">${t}</span>`).join('');
+  const outputHTML = (d.outputTypes || []).map(t => `<span class="cap-tag">${t}</span>`).join('');
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-desc">${d.description}</div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Core Specifications</div>
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="spec-label">Parameters</div>
+          <div class="spec-value accent">${d.parameters}</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Context Window</div>
+          <div class="spec-value accent">${d.contextWindow}</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Training Cutoff</div>
+          <div class="spec-value">${d.trainingCutoff}</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Pricing</div>
+          <div class="spec-value">${d.pricing}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Input / Output</div>
+      <div class="spec-item" style="margin-bottom:8px">
+        <div class="spec-label">Input Types</div>
+        <div class="caps-list" style="margin-top:6px">${inputHTML}</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Output Types</div>
+        <div class="caps-list" style="margin-top:6px">${outputHTML}</div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Hardware Requirements</div>
+      <div class="hw-box">${d.hardware}</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Capabilities</div>
+      <div class="caps-list">${capsHTML}</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Notable Fact</div>
+      <div class="modal-desc" style="border-left-color:#f59e0b; margin-bottom:0">⚡ ${d.notable}</div>
+    </div>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalBtn();
+}
+
+function closeModalBtn() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModalBtn();
+});
+
+/* ============================================================
+   THEME TOGGLE
+============================================================ */
+let isLight = false;
+
+function toggleTheme() {
+  isLight = !isLight;
+  document.documentElement.classList.toggle('light', isLight);
+  document.getElementById('theme-icon').textContent  = isLight ? '🌙' : '☀️';
+  document.getElementById('theme-label').textContent = isLight ? 'Dark Mode' : 'Light Mode';
+  // Persist preference
+  try { localStorage.setItem('aitml-theme', isLight ? 'light' : 'dark'); } catch(e) {}
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Load saved theme
+  try {
+    const saved = localStorage.getItem('aitml-theme');
+    if (saved === 'light') {
+      isLight = true;
+      document.documentElement.classList.add('light');
+      document.getElementById('theme-icon').textContent  = '🌙';
+      document.getElementById('theme-label').textContent = 'Dark Mode';
+    }
+  } catch(e) {}
+
+  buildProviderTabs();
+  const p = PROVIDERS[0];
+  document.documentElement.style.setProperty('--accent', p.color);
+  document.documentElement.style.setProperty('--glow', `rgba(${p.colorRGB},0.25)`);
+  renderProvider(0);
+});
+</script>
+</body>
+</html>
