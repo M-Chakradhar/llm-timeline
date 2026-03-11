@@ -140,12 +140,29 @@
   /* ============================================================
      PROVIDER TABS
   ============================================================ */
+  .provider-tabs-outer {
+    position: relative;
+  }
+  .provider-tabs-outer::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, var(--bg));
+    pointer-events: none;
+    z-index: 5;
+    transition: background 0.4s ease;
+  }
   .provider-tabs-wrap {
     padding: 16px 40px 0;
     overflow-x: auto;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+    padding-right: 60px;
   }
-  .provider-tabs-wrap::-webkit-scrollbar { display: none; }
+  .provider-tabs-wrap::-webkit-scrollbar { height: 3px; }
+  .provider-tabs-wrap::-webkit-scrollbar-track { background: transparent; }
+  .provider-tabs-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
   .provider-tabs {
     display: flex;
     gap: 6px;
@@ -776,10 +793,12 @@
 <!-- ============================================================
      PROVIDER TABS
 ============================================================ -->
+<div class="provider-tabs-outer">
 <div class="provider-tabs-wrap">
   <div class="provider-tabs" id="provider-tabs">
     <!-- Injected by JS -->
   </div>
+</div>
 </div>
 
 <!-- ============================================================
@@ -2295,6 +2314,189 @@ const PROVIDERS = [
           capabilities: ["On-device vision", "Image captioning", "Visual QA", "Document understanding"],
           pricing: "Open weights (Apache 2.0)",
           notable: "First vision model small enough to run on Raspberry Pi and low-end smartphones."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     KRUTRIM (OLA)
+  ────────────────────────────────────────── */
+  {
+    id: "krutrim",
+    name: "Krutrim",
+    color: "#ff6b35",
+    colorRGB: "255,107,53",
+    description: "India's first AI unicorn, founded by Bhavish Aggarwal (Ola). Building India-first LLMs optimized for Indic languages and multilingual understanding across 22 official Indian languages.",
+    models: [
+      {
+        id: "krutrim1", name: "Krutrim", shortName: "Krtm-1",
+        date: "2024-01", displayDate: "Jan 2024", type: "Language",
+        brief: { params: "~7B (est.)", context: "4K tokens", access: "API" },
+        details: {
+          description: "Krutrim is India's first homegrown LLM, launched by Ola's Bhavish Aggarwal. Trained on a dataset that includes 2 trillion tokens with a strong focus on Indic languages, making it one of the most capable models for Indian language understanding.",
+          parameters: "~7 billion (estimated)",
+          contextWindow: "4,096 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Late 2023",
+          hardware: "Cloud only (Krutrim Cloud API).",
+          capabilities: ["22 Indic languages", "Hindi", "Tamil", "Telugu", "Bengali", "Marathi", "Text generation", "Translation"],
+          pricing: "API via Krutrim Cloud (enterprise pricing)",
+          notable: "India's first AI unicorn — valued at $1B within weeks of launch."
+        }
+      },
+      {
+        id: "krutrim-pro", name: "Krutrim Pro", shortName: "Krtm-Pro",
+        date: "2024-06", displayDate: "Jun 2024", type: "Multimodal",
+        brief: { params: "Unknown", context: "8K tokens", access: "API" },
+        details: {
+          description: "Krutrim Pro is the upgraded flagship from Ola's AI lab, adding multimodal capabilities and improved multilingual performance. Designed for enterprise deployments across India's diverse linguistic landscape.",
+          parameters: "Undisclosed",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text", "Image"], outputTypes: ["Text"],
+          trainingCutoff: "Apr 2024",
+          hardware: "Cloud only (Krutrim Cloud). Deployed on Indian data center infrastructure.",
+          capabilities: ["Vision", "22 Indic languages", "Code", "Reasoning", "Enterprise workflows", "Indian context understanding"],
+          pricing: "Enterprise API pricing via Krutrim Cloud",
+          notable: "First Indian multimodal LLM; trained and hosted entirely on Indian infrastructure."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     SARVAM AI
+  ────────────────────────────────────────── */
+  {
+    id: "sarvam",
+    name: "Sarvam AI",
+    color: "#00b4d8",
+    colorRGB: "0,180,216",
+    description: "Bengaluru-based AI startup co-founded by IIT alumni, building India's most capable Indic language models. Backed by Lightspeed and others; partnered with Government of India's IndiaAI Mission.",
+    models: [
+      {
+        id: "sarvam1", name: "Sarvam-1", shortName: "Srvam-1",
+        date: "2024-02", displayDate: "Feb 2024", type: "Language",
+        brief: { params: "2B", context: "4K tokens", access: "Open" },
+        details: {
+          description: "Sarvam-1 is a 2B parameter model purpose-built for 10 major Indic languages, trained on 4 trillion tokens. It outperforms models 5x its size on Indic NLP benchmarks — the first research-grade open Indian LLM.",
+          parameters: "2 billion",
+          contextWindow: "4,096 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Dec 2023",
+          hardware: "4GB VRAM (4-bit quant ~2GB). Runs on consumer hardware.",
+          capabilities: ["Hindi", "Bengali", "Gujarati", "Kannada", "Malayalam", "Marathi", "Punjabi", "Tamil", "Telugu", "Odia", "Code switching", "Transliteration"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "Outperforms LLaMA 2 7B on all Indic benchmarks at 2B parameters — most efficient Indic model."
+        }
+      },
+      {
+        id: "sarvam2b", name: "Sarvam-2B", shortName: "Srvam-2B",
+        date: "2024-07", displayDate: "Jul 2024", type: "Language",
+        brief: { params: "2B", context: "8K tokens", access: "Open" },
+        details: {
+          description: "Sarvam-2B improved on Sarvam-1 with better instruction following, expanded context, and stronger performance in code-switching (mixing English and Indic languages naturally in conversation).",
+          parameters: "2 billion",
+          contextWindow: "8,192 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "May 2024",
+          hardware: "4GB VRAM (full), ~2GB (4-bit quant). Runs on mobile via GGUF.",
+          capabilities: ["10 Indic languages", "Code switching", "Instruction following", "Transliteration", "Summarization in Indian languages"],
+          pricing: "Open weights (Apache 2.0)",
+          notable: "Best code-switching performance of any open model — handles Hinglish, Tanglish natively."
+        }
+      },
+      {
+        id: "sarvam-m", name: "Sarvam-M", shortName: "Srvam-M",
+        date: "2025-03", displayDate: "Mar 2025", type: "Reasoning",
+        brief: { params: "24B (MoE)", context: "32K tokens", access: "Open" },
+        details: {
+          description: "Sarvam-M is Sarvam AI's flagship reasoning model, built on a Mixture-of-Experts architecture. It's the first Indian reasoning model, optimized for complex tasks in both English and Indic languages.",
+          parameters: "24 billion (MoE — ~8B active)",
+          contextWindow: "32,768 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Jan 2025",
+          hardware: "~16GB VRAM (full), ~8GB (4-bit quant). API available.",
+          capabilities: ["Reasoning", "Math", "10 Indic languages", "Code", "Chain-of-thought", "MoE efficiency"],
+          pricing: "Open weights + Sarvam API",
+          notable: "First Indian reasoning model; MoE architecture makes it the most efficient large Indic model."
+        }
+      }
+    ]
+  },
+
+  /* ──────────────────────────────────────────
+     AI4BHARAT (IIT MADRAS)
+  ────────────────────────────────────────── */
+  {
+    id: "ai4bharat",
+    name: "AI4Bharat",
+    color: "#f72585",
+    colorRGB: "247,37,133",
+    description: "Research lab at IIT Madras focused exclusively on Indian language AI. Built the most comprehensive suite of Indic NLP models — IndicBERT, IndicBART, IndicTrans, and Airavata.",
+    models: [
+      {
+        id: "indicbert", name: "IndicBERT v2", shortName: "IndBERT",
+        date: "2022-08", displayDate: "Aug 2022", type: "Language",
+        brief: { params: "278M", context: "512 tokens", access: "Open" },
+        details: {
+          description: "IndicBERT v2 is a BERT-based encoder model trained on 9 billion tokens across 24 Indian languages using IndicCorpus — the largest curated Indic language dataset. Used for classification, NER, and QA.",
+          parameters: "278 million",
+          contextWindow: "512 tokens",
+          inputTypes: ["Text"], outputTypes: ["Embeddings / Classification"],
+          trainingCutoff: "2022",
+          hardware: "2GB VRAM. CPU-friendly.",
+          capabilities: ["24 Indian languages", "Named Entity Recognition", "POS Tagging", "Question Answering", "Text Classification", "Sentence embeddings"],
+          pricing: "Open weights (MIT / CC-BY)",
+          notable: "Covers all 22 official Indian languages plus Sanskrit and Sindhi — broadest Indic language coverage."
+        }
+      },
+      {
+        id: "indictrans2", name: "IndicTrans2", shortName: "IndTrns",
+        date: "2023-05", displayDate: "May 2023", type: "Language",
+        brief: { params: "200M / 1.1B", context: "1K tokens", access: "Open" },
+        details: {
+          description: "IndicTrans2 is the most accurate open-source translation model for all 22 scheduled Indian languages, supporting all 462 language pairs between English and Indian languages. Developed for the Government of India's Bhashini platform.",
+          parameters: "200M (distilled), 1.1B (full)",
+          contextWindow: "1,024 tokens",
+          inputTypes: ["Text"], outputTypes: ["Translated Text"],
+          trainingCutoff: "Feb 2023",
+          hardware: "200M: 2GB VRAM. 1.1B: 4GB VRAM.",
+          capabilities: ["22 Indian languages ↔ English translation", "All 462 Indic language pairs", "Dialect handling", "Code-mixed text"],
+          pricing: "Open weights (MIT)",
+          notable: "Powers India's national Bhashini language platform — official government deployment."
+        }
+      },
+      {
+        id: "airavata", name: "Airavata", shortName: "Airvta",
+        date: "2024-01", displayDate: "Jan 2024", type: "Language",
+        brief: { params: "7B", context: "4K tokens", access: "Open" },
+        details: {
+          description: "Airavata is AI4Bharat's instruction-tuned Hindi LLM, built on OpenHathi (a Hindi-adapted LLaMA 2) and fine-tuned on 385K+ Hindi instruction samples. First open Hindi instruction-following model.",
+          parameters: "7 billion",
+          contextWindow: "4,096 tokens",
+          inputTypes: ["Text"], outputTypes: ["Text"],
+          trainingCutoff: "Nov 2023",
+          hardware: "8GB VRAM (4-bit quant ~5GB).",
+          capabilities: ["Hindi instruction following", "Summarization", "Translation", "Q&A", "Creative writing in Hindi", "Code switching"],
+          pricing: "Open weights (CC-BY-4.0)",
+          notable: "First openly available Hindi instruction-tuned LLM — democratizes Hindi AI for researchers."
+        }
+      },
+      {
+        id: "sangraha", name: "Sangraha / Anudesh", shortName: "Sngrah",
+        date: "2024-03", displayDate: "Mar 2024", type: "Language",
+        brief: { params: "Dataset", context: "N/A", access: "Open" },
+        details: {
+          description: "Sangraha is AI4Bharat's high-quality filtered Indic language corpus of 251B tokens across 22 languages — the foundation dataset powering Sarvam, Krutrim, and other Indian LLMs. Anudesh is the accompanying instruction dataset.",
+          parameters: "N/A (dataset, not a model)",
+          contextWindow: "N/A",
+          inputTypes: ["N/A"], outputTypes: ["N/A"],
+          trainingCutoff: "2024",
+          hardware: "N/A — downloadable dataset.",
+          capabilities: ["251B token corpus", "22 Indian languages", "Quality filtered", "Culturally grounded", "Open instruction data (Anudesh)"],
+          pricing: "Open dataset (CC-BY / ODC-By)",
+          notable: "Backbone dataset used by nearly every Indian LLM — the 'Common Crawl of India'."
         }
       }
     ]
